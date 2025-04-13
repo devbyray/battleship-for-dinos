@@ -11,8 +11,15 @@
 <body>
     <div class="container">
         <header class="top-bar">
-            <h1 id="game-title">Dino Digger: Bone Battle</h1>
-            <!-- Language switcher will be inserted here by JS -->
+            <div class="top-bar-left">
+                <h1 id="game-title">Dino Digger: Bone Battle</h1>
+            </div>
+            <div class="top-bar-right">
+                <!-- Language switcher will be inserted here by JS -->
+                <button id="top-reset-btn" class="reset-icon-button" title="Reset Game">
+                    <i class="fas fa-undo-alt"></i>
+                </button>
+            </div>
         </header>
 
         <div id="game-info">
@@ -49,12 +56,11 @@
                 <button id="random-placement-btn">Random Placement</button>
             </div>
         </div>
-
-        <div class="controls">
-            <button id="start-game-btn" disabled>Start Digging!</button>
-            <button id="reset-game-btn">Reset Game</button>
-        </div>
         
+        <!-- Removed the bottom controls with the redundant reset button -->
+        <!-- The start button now only appears in the overlay -->
+        
+        <!-- Game over modal -->
         <div id="game-modal" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
@@ -62,6 +68,23 @@
                 <p id="modal-message"></p>
                 <button id="play-again-btn">Play Again</button>
             </div>
+        </div>
+        
+        <!-- Start game modal -->
+        <div id="start-game-modal" class="start-game-modal">
+            <div class="modal-content">
+                <h2 id="start-modal-title">Ready to Dig!</h2>
+                <p id="start-modal-message">All dinosaur bones are placed. Are you ready to start digging?</p>
+                <div class="modal-buttons">
+                    <button id="confirm-start-btn">Start Digging</button>
+                    <button id="cancel-start-btn">Wait, I need to adjust</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Ready to dig overlay button -->
+        <div id="start-overlay" class="start-overlay">
+            <button id="start-game-btn" disabled>Start Digging!</button>
         </div>
     </div>
     

@@ -29,13 +29,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const rotateBtn = document.getElementById('rotate-btn');
     const randomPlacementBtn = document.getElementById('random-placement-btn');
     const startGameBtn = document.getElementById('start-game-btn');
-    const resetGameBtn = document.getElementById('reset-game-btn');
+    const topResetBtn = document.getElementById('top-reset-btn');
     const statusMessageElement = document.getElementById('status-message');
-    const modal = document.getElementById('game-modal');
+    const startOverlay = document.getElementById('start-overlay');
+    
+    // Game over modal elements
+    const gameOverModal = document.getElementById('game-modal');
     const modalTitle = document.getElementById('modal-title');
     const modalMessage = document.getElementById('modal-message');
     const closeModalBtn = document.querySelector('.close');
     const playAgainBtn = document.getElementById('play-again-btn');
+    
+    // Start game modal elements
+    const startGameModal = document.getElementById('start-game-modal');
+    const confirmStartBtn = document.getElementById('confirm-start-btn');
+    const cancelStartBtn = document.getElementById('cancel-start-btn');
     
     // Initialize Game
     function initGame() {
@@ -119,11 +127,21 @@ document.addEventListener('DOMContentLoaded', () => {
         // Random placement button
         randomPlacementBtn.addEventListener('click', placeBonesRandomly);
         
-        // Start game button
-        startGameBtn.addEventListener('click', startGame);
+        // Start game button - now shows modal
+        startGameBtn.addEventListener('click', showStartGameModal);
         
-        // Reset game button
-        resetGameBtn.addEventListener('click', resetGame);
+        // Reset game button in top bar
+        topResetBtn.addEventListener('click', resetGame);
+        
+        // Start game modal buttons
+        confirmStartBtn.addEventListener('click', () => {
+            startGameModal.style.display = 'none';
+            startGame();
+        });
+        
+        cancelStartBtn.addEventListener('click', () => {
+            startGameModal.style.display = 'none';
+        });
         
         // Player grid cell click for bone placement
         const playerCells = playerGrid.querySelectorAll('.cell');
@@ -146,23 +164,53 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         
-        // Modal close button
+        // Game over modal events
         closeModalBtn.addEventListener('click', () => {
-            modal.style.display = 'none';
+            gameOverModal.style.display = 'none';
         });
         
-        // Play again button
         playAgainBtn.addEventListener('click', () => {
-            modal.style.display = 'none';
+            gameOverModal.style.display = 'none';
             resetGame();
         });
         
-        // Close modal when clicking outside
+        // Close modals when clicking outside
         window.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.style.display = 'none';
+            if (e.target === gameOverModal) {
+                gameOverModal.style.display = 'none';
+            }
+            if (e.target === startGameModal) {
+                startGameModal.style.display = 'none';
             }
         });
+    }
+    
+    // Show/hide start game button in overlay
+    function toggleStartOverlay(show) {
+        if (show) {
+            startOverlay.classList.add('visible');
+            startGameBtn.disabled = false;
+        } else {
+            startOverlay.classList.remove('visible');
+            startGameBtn.disabled = true;
+        }
+    }
+    
+    // Show the start game modal
+    function showStartGameModal() {
+        if (gameState.playerBonesPlaced.length === bones.length) {
+            startGameModal.style.display = 'block';
+            
+            // Update modal text with language manager
+            document.getElementById('start-modal-title').textContent = 
+                languageManager.getText('modalReadyToDig');
+            document.getElementById('start-modal-message').textContent = 
+                languageManager.getText('modalAllBonesPlaced');
+            confirmStartBtn.textContent = languageManager.getText('startModalButtons');
+            cancelStartBtn.textContent = languageManager.getText('startModalCancel');
+        } else {
+            updateStatusMessage(languageManager.getText('needAllBones'));
+        }
     }
     
     // Preview bone placement when hovering over cells
@@ -310,8 +358,13 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Enable start button if all bones are placed
         if (gameState.playerBonesPlaced.length === bones.length) {
-            startGameBtn.disabled = false;
+            toggleStartOverlay(true);
             updateStatusMessage(languageManager.getText('allBonesPlaced'));
+            
+            // Show the start game modal automatically when all bones are placed
+            setTimeout(() => {
+                showStartGameModal();
+            }, 500);
         }
     }
     
@@ -389,8 +442,13 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Enable start button if all bones are placed
         if (gameState.playerBonesPlaced.length === bones.length) {
-            startGameBtn.disabled = false;
+            toggleStartOverlay(true);
             updateStatusMessage(languageManager.getText('allBonesPlacedRandom'));
+            
+            // Show the start game modal automatically when all bones are placed
+            setTimeout(() => {
+                showStartGameModal();
+            }, 500);
         }
     }
     
@@ -478,8 +536,8 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState.selectedBone = null;
         gameState.orientation = 'horizontal';
         
-        // Disable start button
-        startGameBtn.disabled = true;
+        // Hide the start overlay
+        toggleStartOverlay(false);
         
         updateStatusMessage(languageManager.getText('statusPlaceBones'));
     }
@@ -497,7 +555,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Disable bone selection and placement controls
         rotateBtn.disabled = true;
         randomPlacementBtn.disabled = true;
-        startGameBtn.disabled = true;
+        
+        // Hide the start overlay
+        toggleStartOverlay(false);
         
         updateStatusMessage(languageManager.getText('gameStarted'));
     }
@@ -720,11 +780,17 @@ document.addEventListener('DOMContentLoaded', () => {
             modalTitle.textContent = languageManager.getText('modalCongrats');
             modalMessage.textContent = languageManager.getText('modalWinMessage');
         } else {
-            modalTitle.textContent = languageManager.getText('modalGameOver');
+            modalTitle.textContent = languageManager.getText('modalTitle');
             modalMessage.textContent = languageManager.getText('modalLoseMessage');
         }
         
-        modal.style.display = 'block';
+        // Set the Play Again button text from language file
+        playAgainBtn.textContent = languageManager.getText('modalButtons');
+        
+        // Set close button text
+        closeModalBtn.textContent = languageManager.getText('closeButton');
+        
+        gameOverModal.style.display = 'block';
     }
     
     // Update status message

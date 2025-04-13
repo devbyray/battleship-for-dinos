@@ -31,7 +31,17 @@ const languages = {
         computerExcavated: "The computer has completely excavated your {0}!",
         computerHitMessage: "Hit! The computer found part of your {0}!",
         computerMissMessage: "Miss! The computer didn't find anything. Your turn!",
-        languageSwitcher: "Language:"
+        languageSwitcher: "Language:",
+        modalReadyToDig: "Ready to Dig!",
+        modalAllBonesPlaced: "All dinosaur bones are placed. Are you ready to start digging?",
+        modalWaitAdjust: "Wait, I need to adjust",
+        
+        // Popup related texts
+        modalTitle: "Game Over",
+        closeButton: "×",
+        modalButtons: "Play Again",
+        startModalButtons: "Start Digging",
+        startModalCancel: "Wait, I need to adjust"
     },
     nl: {
         gameTitle: "Dino Graver: Bottenjacht",
@@ -64,7 +74,17 @@ const languages = {
         computerExcavated: "De computer heeft je {0} volledig opgegraven!",
         computerHitMessage: "Raak! De computer heeft een deel van je {0} gevonden!",
         computerMissMessage: "Mis! De computer heeft niets gevonden. Jouw beurt!",
-        languageSwitcher: "Taal:"
+        languageSwitcher: "Taal:",
+        modalReadyToDig: "Klaar om te Graven!",
+        modalAllBonesPlaced: "Alle dinosaurusbotten zijn geplaatst. Ben je klaar om te beginnen met graven?",
+        modalWaitAdjust: "Wacht, ik moet nog aanpassen",
+        
+        // Popup related texts
+        modalTitle: "Spel Voorbij",
+        closeButton: "×",
+        modalButtons: "Opnieuw Spelen",
+        startModalButtons: "Begin met Graven",
+        startModalCancel: "Wacht, ik moet nog aanpassen"
     }
 };
 

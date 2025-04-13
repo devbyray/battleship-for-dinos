@@ -44,6 +44,33 @@ body {
     flex-shrink: 0;
 }
 
+.top-bar-left {
+    flex: 1;
+}
+
+.top-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.reset-icon-button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.reset-icon-button:hover {
+    transform: rotate(30deg);
+}
+
 .top-bar h1 {
     color: white;
     margin: 0;
@@ -54,7 +81,7 @@ body {
 /* Game info area */
 #game-info {
     background-color: #fff5e6;
-    padding: 8px;
+    padding: 5px;
     border-radius: 0;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
@@ -73,24 +100,12 @@ body {
     justify-content: space-between;
     padding: 10px;
     flex: 1;
-    min-height: 0; /* Important for flexbox to respect parent height */
+    min-height: 0;
     overflow: hidden;
+    height: calc(60vh - 40px); /* Use fixed height instead of max-height */
 }
 
-.board-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0; /* Prevent overflow */
-}
-
-h2 {
-    margin-bottom: 5px;
-    color: #8b5a2b;
-    font-size: 1.2rem;
-    text-align: center;
-}
-
+/* Grid container and grid */
 .grid-container {
     background-color: #f8d8a8;
     padding: 8px;
@@ -100,6 +115,8 @@ h2 {
     display: flex;
     flex-direction: column;
     min-height: 0; /* Important for flexbox */
+    width: 100%;
+    height: 100%;
 }
 
 .grid {
@@ -107,8 +124,12 @@ h2 {
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(10, 1fr);
     gap: 2px;
-    flex: 1;
-    min-height: 0;
+    width: 100%;
+    height: 100%;
+    max-width: min(450px, 90vw, 90vh - 150px);  /* More responsive max width */
+    max-height: min(450px, 90vw, 90vh - 150px); /* More responsive max height */
+    margin: 0 auto;
+    aspect-ratio: 1/1;
 }
 
 .cell {
@@ -117,16 +138,86 @@ h2 {
     transition: all 0.2s ease;
     cursor: pointer;
     position: relative;
-    aspect-ratio: 1/1;
+    max-width: 45px;
+    max-height: 45px;
+    min-width: 20px;
+    min-height: 20px;
 }
 
 .cell:hover {
     background-color: #d4a76a;
 }
 
+/* Responsive grid adjustments */
+@media (max-width: 768px) {
+    .grid {
+        max-width: 350px;
+        max-height: 350px;
+    }
+    
+    .cell {
+        max-width: 35px;
+        max-height: 35px;
+    }
+}
+
+@media (max-width: 480px) {
+    .grid {
+        max-width: 300px;
+        max-height: 300px;
+    }
+    
+    .cell {
+        max-width: 30px;
+        max-height: 30px;
+    }
+}
+
+/* Responsive height-based adjustments */
+@media (min-height: 800px) {
+    .game-area {
+        height: calc(65vh - 40px);
+    }
+    
+    .cell {
+        max-width: 50px;
+        max-height: 50px;
+    }
+}
+
+@media (min-height: 1000px) {
+    .game-area {
+        height: calc(70vh - 40px);
+    }
+}
+
+@media (max-height: 600px) {
+    .game-area {
+        height: calc(50vh - 40px);
+    }
+    
+    .cell {
+        max-width: 35px;
+        max-height: 35px;
+    }
+}
+
 /* Player grid styles */
 .player-cell.ship-placed {
     background-color: #a5694f;
+    position: relative;
+}
+
+.player-cell.ship-placed::after {
+    content: '\f5d7'; /* Font Awesome bone icon */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 1em;
+    color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }
 
 /* Hit and miss styles for both grids */
@@ -166,7 +257,7 @@ h2 {
 
 /* Bones selection area */
 .bones-container {
-    padding: 8px;
+    padding: 5px;
     background-color: #fff5e6;
     border-top: 1px solid #e6c389;
     flex-shrink: 0;
@@ -174,12 +265,13 @@ h2 {
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+    gap: 5px;
 }
 
 .bones {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 5px;
     justify-content: center;
     flex: 3;
 }
@@ -313,6 +405,34 @@ button:disabled {
     margin-bottom: 20px;
 }
 
+/* Modal styles for start game popup */
+.start-game-modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.start-game-modal .modal-content {
+    background-color: #fff5e6;
+    margin: 20% auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    text-align: center;
+    animation: modalFadeIn 0.3s;
+}
+
+@keyframes modalFadeIn {
+    from {opacity: 0; transform: translateY(-20px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
 /* Language switcher styles */
 .language-switcher {
     display: flex;
@@ -334,29 +454,92 @@ button:disabled {
     outline: 2px solid #c19c61;
 }
 
+/* Start overlay button */
+.start-overlay {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 50;
+    pointer-events: none; /* Allow clicks to pass through by default */
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.start-overlay.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all; /* Enable clicks when visible */
+}
+
+.start-overlay button {
+    background-color: #6b8e23;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.start-overlay button:hover:not(:disabled) {
+    background-color: #7fa035;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.start-overlay button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.start-overlay button:disabled {
+    background-color: #ccaa88;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .game-area {
         flex-direction: column;
+        max-height: none;
+        gap: 5px;
     }
     
-    .bones {
-        flex: 1;
+    .board-container {
+        max-width: none;
+        aspect-ratio: 1/1;
+        max-height: calc(40vh - 20px);
     }
     
-    .bone-controls {
-        justify-content: center;
-        margin-top: 8px;
-        flex: 100%;
+    .grid-container {
+        padding: 5px;
     }
     
     .bone {
-        padding: 5px 8px;
-        font-size: 0.9em;
+        padding: 4px 6px;
+        font-size: 0.85em;
+    }
+    
+    .bones-container {
+        padding: 3px;
+    }
+    
+    button {
+        padding: 6px 10px;
+        font-size: 0.85rem;
     }
 }
 
 @media (max-height: 600px) {
+    .game-area {
+        height: calc(50vh - 30px);
+    }
+    
     .top-bar {
         height: 35px;
     }
@@ -366,12 +549,12 @@ button:disabled {
     }
     
     #game-info {
-        padding: 5px;
+        padding: 3px;
         font-size: 0.9em;
     }
     
     .bone {
-        padding: 3px 6px;
-        font-size: 0.85em;
+        padding: 3px 5px;
+        font-size: 0.8em;
     }
 }
