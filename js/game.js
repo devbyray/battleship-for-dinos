@@ -19,7 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
         orientation: 'horizontal',
         playerHits: 0,
         computerHits: 0,
-        totalBoneSegments: bones.reduce((total, bone) => total + bone.size, 0)
+        totalBoneSegments: bones.reduce((total, bone) => total + bone.size, 0),
+        isAnimating: false, // Flag to prevent overlapping animations
     };
     
     // DOM elements
@@ -32,6 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const topResetBtn = document.getElementById('top-reset-btn');
     const statusMessageElement = document.getElementById('status-message');
     const startOverlay = document.getElementById('start-overlay');
+    
+    // Animation elements
+    const digAnimationOverlay = document.getElementById('dig-animation');
+    const digTool = document.querySelector('.dig-tool');
     
     // Game over modal elements
     const gameOverModal = document.getElementById('game-modal');
@@ -74,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 cell.classList.add('computer-cell');
                 // Computer cells are clickable for digging
                 cell.addEventListener('click', () => {
-                    if (gameState.isGameStarted && gameState.isPlayerTurn) {
+                    if (gameState.isGameStarted && gameState.isPlayerTurn && !gameState.isAnimating) {
                         handlePlayerDig(cell);
                     }
                 });
@@ -573,7 +578,8 @@ document.addEventListener('DOMContentLoaded', () => {
             orientation: 'horizontal',
             playerHits: 0,
             computerHits: 0,
-            totalBoneSegments: bones.reduce((total, bone) => total + bone.size, 0)
+            totalBoneSegments: bones.reduce((total, bone) => total + bone.size, 0),
+            isAnimating: false
         };
         
         // Reset both grids
@@ -581,7 +587,12 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const computerCells = computerGrid.querySelectorAll('.cell');
         computerCells.forEach(cell => {
-            cell.classList.remove('hit', 'miss');
+            cell.classList.remove('hit', 'miss', 'animated', 'bone-complete');
+        });
+        
+        // Remove bone-complete-row class from parent elements
+        document.querySelectorAll('.bone-complete-row').forEach(el => {
+            el.classList.remove('bone-complete-row');
         });
         
         // Enable controls
@@ -593,14 +604,17 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Handle player's dig attempt
     function handlePlayerDig(cell) {
-        if (!gameState.isPlayerTurn || cell.classList.contains('hit') || cell.classList.contains('miss')) {
+        if (!gameState.isPlayerTurn || cell.classList.contains('hit') || cell.classList.contains('miss') || gameState.isAnimating) {
             return;
         }
+        
+        gameState.isAnimating = true;
         
         const row = parseInt(cell.dataset.row);
         const col = parseInt(cell.dataset.col);
         let hit = false;
         let boneName = '';
+        let hitBone = null;
         
         // Check if the dig hit a bone
         for (let bone of gameState.computerBonesPlaced) {
@@ -610,11 +624,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     boneName = bone.name;
                     bone.hits++;
                     gameState.playerHits++;
-                    
-                    // Check if the bone is completely excavated
-                    if (bone.hits === bone.size) {
-                        updateStatusMessage(languageManager.getText('completelyExcavated', boneName));
-                    }
+                    hitBone = bone;
                     
                     break;
                 }
@@ -622,15 +632,28 @@ document.addEventListener('DOMContentLoaded', () => {
             if (hit) break;
         }
         
-        // Update the cell
+        // Update the cell immediately without animation
         if (hit) {
             cell.classList.add('hit');
-            const bone = gameState.computerBonesPlaced.find(b => b.name === boneName);
-            updateStatusMessage(
-                bone.hits === bone.size 
-                ? languageManager.getText('completelyExcavated', boneName)
-                : languageManager.getText('hitMessage', boneName)
-            );
+            
+            // Check if the bone is completely excavated
+            if (hitBone.hits === hitBone.size) {
+                updateStatusMessage(languageManager.getText('completelyExcavated', boneName));
+                
+                // Highlight all cells of the completed bone
+                const bonePositions = hitBone.positions;
+                const boneCells = [];
+                
+                // Find all cells of this bone
+                bonePositions.forEach(pos => {
+                    const index = pos.row * GRID_SIZE + pos.col;
+                    const boneCell = computerGrid.children[index];
+                    boneCells.push(boneCell);
+                    boneCell.classList.add('bone-complete');
+                });
+            } else {
+                updateStatusMessage(languageManager.getText('hitMessage', boneName));
+            }
         } else {
             cell.classList.add('miss');
             updateStatusMessage(languageManager.getText('missMessage'));
@@ -639,16 +662,24 @@ document.addEventListener('DOMContentLoaded', () => {
         // Check if player won
         if (gameState.playerHits === gameState.totalBoneSegments) {
             endGame('player');
+            gameState.isAnimating = false;
             return;
         }
         
-        // Computer's turn after a short delay
+        // Computer's turn
         gameState.isPlayerTurn = false;
-        setTimeout(computerDig, 1000);
+        setTimeout(() => {
+            gameState.isAnimating = false;
+            computerDig();
+        }, 500); // Reduced delay since no animations
     }
     
     // Computer's dig attempt
     function computerDig() {
+        if (gameState.isAnimating) return;
+        
+        gameState.isAnimating = true;
+        
         // Initialize the hunt mode
         const initHuntMode = () => {
             for (let bone of gameState.playerBonesPlaced) {
@@ -716,60 +747,100 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const cellIndex = row * GRID_SIZE + col;
         const cell = playerGrid.children[cellIndex];
-        let hit = false;
-        let boneName = '';
         
-        // Check if the dig hit a bone
-        let hitBone = null; // Store the hit bone for later reference
-        for (let bone of gameState.playerBonesPlaced) {
-            for (let i = 0; i < bone.positions.length; i++) {
-                const pos = bone.positions[i];
-                if (pos.row === row && pos.col === col) {
-                    hit = true;
-                    boneName = bone.name;
-                    bone.hits++;
-                    gameState.computerHits++;
-                    pos.hit = true;
-                    pos.hunted = false;
-                    hitBone = bone; // Store reference to the hit bone
+        // Show the digging animation
+        showDiggingAnimation(cell);
+        
+        setTimeout(() => {
+            // Add animated class for dust effect
+            cell.classList.add('animated');
+            
+            let hit = false;
+            let boneName = '';
+            let hitBone = null;
+            
+            // Check if the dig hit a bone
+            setTimeout(() => {
+                for (let bone of gameState.playerBonesPlaced) {
+                    for (let i = 0; i < bone.positions.length; i++) {
+                        const pos = bone.positions[i];
+                        if (pos.row === row && pos.col === col) {
+                            hit = true;
+                            boneName = bone.name;
+                            bone.hits++;
+                            gameState.computerHits++;
+                            pos.hit = true;
+                            pos.hunted = false;
+                            hitBone = bone; // Store reference to the hit bone
+                            
+                            break;
+                        }
+                    }
+                    if (hit) break;
+                }
+                
+                // Update the cell
+                if (hit) {
+                    cell.classList.add('hit');
                     
                     // Check if the bone is completely excavated
-                    if (bone.hits === bone.size) {
+                    if (hitBone.hits === hitBone.size) {
                         updateStatusMessage(languageManager.getText('computerExcavated', boneName));
                         
                         // Mark all positions as hunted
-                        bone.positions.forEach(p => {
+                        hitBone.positions.forEach(p => {
                             p.hunted = true;
                         });
+                        
+                        // Highlight all cells of the completed bone
+                        setTimeout(() => {
+                            const bonePositions = hitBone.positions;
+                            const boneCells = [];
+                            
+                            // Find all cells of this bone
+                            bonePositions.forEach(pos => {
+                                const index = pos.row * GRID_SIZE + pos.col;
+                                const boneCell = playerGrid.children[index];
+                                boneCells.push(boneCell);
+                                boneCell.classList.add('bone-complete');
+                            });
+                            
+                            // Add the celebration effect to the bone row
+                            if (boneCells.length > 0) {
+                                const parent = playerGrid;
+                                parent.classList.add('bone-complete-row');
+                                
+                                // Remove the class after animation
+                                setTimeout(() => {
+                                    parent.classList.remove('bone-complete-row');
+                                }, 2000);
+                            }
+                        }, 300);
+                        
+                    } else {
+                        updateStatusMessage(languageManager.getText('computerHitMessage', boneName));
                     }
-                    
-                    break;
+                } else {
+                    cell.classList.add('miss');
+                    updateStatusMessage(languageManager.getText('computerMissMessage'));
                 }
-            }
-            if (hit) break;
-        }
-        
-        // Update the cell
-        if (hit) {
-            cell.classList.add('hit');
-            updateStatusMessage(
-                hitBone.hits === hitBone.size 
-                ? languageManager.getText('computerExcavated', boneName)
-                : languageManager.getText('computerHitMessage', boneName)
-            );
-        } else {
-            cell.classList.add('miss');
-            updateStatusMessage(languageManager.getText('computerMissMessage'));
-        }
-        
-        // Check if computer won
-        if (gameState.computerHits === gameState.totalBoneSegments) {
-            endGame('computer');
-            return;
-        }
-        
-        // Back to player's turn
-        gameState.isPlayerTurn = true;
+                
+                // Check if computer won
+                if (gameState.computerHits === gameState.totalBoneSegments) {
+                    setTimeout(() => {
+                        endGame('computer');
+                        gameState.isAnimating = false;
+                    }, 1500); // Allow time for final animation
+                    return;
+                }
+                
+                // Back to player's turn
+                setTimeout(() => {
+                    gameState.isPlayerTurn = true;
+                    gameState.isAnimating = false;
+                }, 800);
+            }, 600);
+        }, 600);
     }
     
     // End the game
