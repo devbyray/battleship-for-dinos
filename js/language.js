@@ -94,9 +94,11 @@ class LanguageManager {
                 </select>
             `;
             
-            // Add switcher to the page
-            const header = document.querySelector('header');
-            header.appendChild(languageContainer);
+            // Add switcher to the top bar
+            const topBar = document.querySelector('.top-bar');
+            if (topBar) {
+                topBar.appendChild(languageContainer);
+            }
             
             // Set selected language
             const select = document.getElementById('language-select');
