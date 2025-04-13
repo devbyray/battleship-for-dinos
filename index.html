@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dino Digger: Bone Battle</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 id="game-title">Dino Digger: Bone Battle</h1>
+            <div id="game-info">
+                <p id="game-description">Find Barry Bones' dinosaur remains before the computer finds yours!</p>
+                <div id="status-message">Place your dinosaur bones on the grid</div>
+            </div>
+        </header>
+
+        <div class="game-area">
+            <div class="board-container">
+                <h2 id="player-board-title">Your Excavation Site</h2>
+                <div class="grid-container">
+                    <div id="player-grid" class="grid"></div>
+                </div>
+                <div class="bones-container">
+                    <div id="player-bones" class="bones">
+                        <div class="bone t-rex" data-size="5" draggable="true">T-Rex (5)</div>
+                        <div class="bone stegosaurus" data-size="4" draggable="true">Stegosaurus (4)</div>
+                        <div class="bone triceratops" data-size="3" draggable="true">Triceratops (3)</div>
+                        <div class="bone velociraptor" data-size="3" draggable="true">Velociraptor (3)</div>
+                        <div class="bone compsognathus" data-size="2" draggable="true">Compsognathus (2)</div>
+                    </div>
+                    <button id="rotate-btn">Rotate Bone</button>
+                    <button id="random-placement-btn">Random Placement</button>
+                </div>
+            </div>
+
+            <div class="board-container">
+                <h2 id="computer-board-title">Computer's Excavation Site</h2>
+                <div class="grid-container">
+                    <div id="computer-grid" class="grid"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="start-game-btn" disabled>Start Digging!</button>
+            <button id="reset-game-btn">Reset Game</button>
+        </div>
+        
+        <div id="game-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2 id="modal-title">Game Over</h2>
+                <p id="modal-message"></p>
+                <button id="play-again-btn">Play Again</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/language.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
