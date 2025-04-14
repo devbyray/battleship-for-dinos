@@ -608,6 +608,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Hide the start overlay
         toggleStartOverlay(false);
         
+        // Initialize toggle button for player grid on mobile
+        initTogglePlayerGridButton();
+        
         updateStatusMessage(languageManager.getText('gameStarted'));
     }
     
@@ -915,6 +918,29 @@ document.addEventListener('DOMContentLoaded', () => {
     // Update status message
     function updateStatusMessage(message) {
         statusMessageElement.textContent = message;
+    }
+    
+    // Toggle player grid visibility in mobile mode
+    function initTogglePlayerGridButton() {
+        const toggleBtn = document.getElementById('toggle-player-grid-btn');
+        const playerBoard = document.querySelector('.board-container:first-child');
+        
+        if (!toggleBtn || !playerBoard) return;
+        
+        toggleBtn.addEventListener('click', () => {
+            // Toggle visible class on player board
+            playerBoard.classList.toggle('visible');
+            // Toggle active class on button
+            toggleBtn.classList.toggle('active');
+            
+            // Change icon based on visibility
+            const icon = toggleBtn.querySelector('i');
+            if (playerBoard.classList.contains('visible')) {
+                icon.className = 'fas fa-eye-slash'; // Hidden icon
+            } else {
+                icon.className = 'fas fa-eye'; // Show icon
+            }
+        });
     }
     
     // Initialize the game
