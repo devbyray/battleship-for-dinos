@@ -1,7 +1,7 @@
 // Languages configuration
 const languages = {
     en: {
-        gameTitle: "Dino Digger: Bone Battle",
+        gameTitle: "Dino Digger",
         gameDescription: "Find Barry Bones' dinosaur remains before the computer finds yours!",
         statusPlaceBones: "Place your dinosaur bones on the grid",
         yourExcavationSite: "Your Excavation Site",
@@ -44,7 +44,7 @@ const languages = {
         startModalCancel: "Wait, I need to adjust"
     },
     nl: {
-        gameTitle: "Dino Graver: Bottenjacht",
+        gameTitle: "Dino Graver",
         gameDescription: "Vind Barry Bones' dinosaurusresten voordat de computer die van jou vindt!",
         statusPlaceBones: "Plaats je dinosaurusbotten op het raster",
         yourExcavationSite: "Jouw Opgraafplaats",
