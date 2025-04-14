@@ -1,0 +1,77 @@
+/* Game controls */
+.controls {
+    text-align: center;
+    padding: 8px;
+    flex-shrink: 0;
+    border-top: 1px solid #e6c389;
+}
+
+/* General button styling */
+button {
+    background-color: #8b5a2b;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+}
+
+button:hover {
+    background-color: #a26b33;
+}
+
+button:disabled {
+    background-color: #ccaa88;
+    cursor: not-allowed;
+}
+
+/* Start overlay button */
+.start-overlay {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 50;
+    pointer-events: none; /* Allow clicks to pass through by default */
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.start-overlay.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all; /* Enable clicks when visible */
+}
+
+.start-overlay button {
+    background-color: #6b8e23;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.start-overlay button:hover:not(:disabled) {
+    background-color: #7fa035;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.start-overlay button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.start-overlay button:disabled {
+    background-color: #ccaa88;
+    cursor: not-allowed;
+    box-shadow: none;
+}

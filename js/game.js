@@ -680,7 +680,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // On mobile, make sure we're showing the computer grid by default at game start
         if (window.innerWidth <= 768) {
             playerBoardContainer.classList.remove('visible');
-            computerBoardContainer.style.display = 'block';
+            computerBoardContainer.style.display = 'flex';
             
             if (togglePlayerGridBtn) {
                 const icon = togglePlayerGridBtn.querySelector('i');
@@ -1000,7 +1000,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         computerBoardContainer.style.display = 'none';
                     } else {
                         // Show computer grid when player grid is hidden
-                        computerBoardContainer.style.display = 'block';
+                        computerBoardContainer.style.display = 'flex';
                     }
                 }
             });
@@ -1017,14 +1017,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     // Reset computer grid display when resizing
                     if (!playerBoardContainer.classList.contains('visible')) {
-                        computerBoardContainer.style.display = 'block';
+                        computerBoardContainer.style.display = 'flex';
                     } else {
                         computerBoardContainer.style.display = 'none';
                     }
                 } else {
                     // On larger screens, both grids can be visible
-                    playerBoardContainer.style.display = 'block';
-                    computerBoardContainer.style.display = 'block';
+                    playerBoardContainer.style.display = 'inherit';
+                    computerBoardContainer.style.display = 'inherit';
                 }
             });
         }

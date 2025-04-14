@@ -1,0 +1,193 @@
+/* Board container */
+.board-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 600px;
+    transition: all 0.3s ease; /* Smooth transition between sizes */
+    background-color: #f8d8a8;
+    border-radius: 8px;
+}
+
+.board-container h2 {
+    padding: 0 5px;
+}
+
+/* Grid container during different game phases */
+.grid-container {
+    background-color: #f8d8a8;
+    padding: 8px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center; /* Center grid horizontally */
+    justify-content: center; /* Center grid vertically */
+    height: auto; /* Allow container to expand based on content */
+    position: relative; /* Important for proper positioning */
+    box-sizing: border-box; /* Include padding in height calculation */
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr); /* Use 1fr instead of fixed sizes for better scaling */
+    grid-template-rows: repeat(10, 1fr);
+    gap: 2px;
+    width: 100%;
+    aspect-ratio: 1/1; /* Maintain square ratio */
+    margin: 0 auto; /* Center the grid in its container */
+}
+
+/* Adding cell styling to make grid blocks visible */
+.cell {
+    border: 1px solid #b08c57;
+    background-color: #f2d9a9;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.cell:hover {
+    background-color: #e6c389;
+    transform: scale(0.95);
+}
+
+/* During placement phase, make player grid bigger */
+body:not(.game-started) .board-container:first-child {
+    max-width: 700px; /* Player grid is larger during placement */
+    width: 100%;
+    order: 1; /* Place it prominently */
+}
+
+body:not(.game-started) .board-container:last-child {
+    max-width: 400px; /* Computer grid is smaller during placement */
+    width: 60%;
+    order: 2;
+    opacity: 0.7; /* Visually indicate it's not active */
+}
+
+/* During gameplay phase, make computer grid bigger */
+body.game-started .board-container:last-child {
+    max-width: 700px; /* Computer grid becomes larger during gameplay */
+    width: 100%;
+    order: 1; /* Place it prominently */
+    opacity: 1;
+}
+
+body.game-started .board-container:first-child {
+    max-width: 400px; /* Player grid becomes smaller during gameplay */
+    width: 60%;
+    order: 2;
+}
+
+/* During gameplay phase, hide the bones container */
+body.game-started .bones-container {
+    display: none;
+}
+
+/* Player grid styles */
+.player-cell.ship-placed {
+    background-color: #a5694f;
+    position: relative;
+}
+
+.player-cell.ship-placed::after {
+    content: '\f5d7'; /* Font Awesome bone icon */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 1em;
+    color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+/* Hit and miss styles for both grids */
+.hit {
+    background-color: #b33a3a !important;
+    position: relative;
+    animation: digAnimation 0.8s forwards;
+}
+
+.hit::after {
+    content: '\f5d7'; /* Font Awesome bone icon */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 1.2em;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    animation: boneReveal 0.8s forwards;
+}
+
+.miss {
+    background-color: #79b0c9 !important;
+    position: relative;
+    animation: digMissAnimation 0.6s forwards;
+}
+
+.miss::after {
+    content: '\f111'; /* Font Awesome circle icon */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 0.8em;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    animation: missReveal 0.6s forwards;
+}
+
+/* Toggle button styles - visible on mobile at all times */
+.toggle-player-grid-btn {
+    display: none; /* Hidden by default on desktop */
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #f8d8a8;
+    color: #3a2b1b;
+    border: 2px solid #3a2b1b;
+    font-size: 24px;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+}
+
+.toggle-player-grid-btn.active {
+    background-color: #3a2b1b;
+    color: #f8d8a8;
+}
+
+.toggle-player-grid-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Dig overlay */
+.dig-animation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 90;
+    display: none;
+}
+
+.dig-tool {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    transform-origin: bottom center;
+    transform: translate(-50%, -50%);
+}

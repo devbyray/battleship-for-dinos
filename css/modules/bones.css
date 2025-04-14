@@ -1,0 +1,168 @@
+/* Bones container and bone selection area */
+.bones-container {
+    padding: 8px;
+    background-color: #fff5e6;
+    border: 1px solid #e6c389;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column; /* Stack bones and controls vertically */
+    gap: 10px;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.bones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.bone-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 5px 0;
+}
+
+/* Bone styles with improved structure for rotation */
+.bone {
+    padding: 8px 10px;
+    background-color: #a5694f;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    user-select: none;
+    min-width: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: transform 0.3s ease, background-color 0.2s;
+}
+
+.bone.placed {
+    color: #fff;
+    background-color: #c65102;
+}
+
+/* Bone label styles - fixed to prevent rotation */
+.bone-label {
+    display: block;
+    position: absolute; /* Position absolutely to prevent rotation */
+    z-index: 2;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 0.9em;
+    font-weight: bold;
+    margin: 3px 0;
+    top: -22px; /* Position above the bone */
+    left: 0;
+    width: 100%;
+    color: #4a3520;
+    text-shadow: 0px 0px 1px rgba(255, 255, 255, 0.5);
+    transition: all 0.2s ease;
+    transform: none !important; /* Ensure no transforms apply to the label */
+}
+
+/* Bone icon styles */
+.bone-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3px;
+    transition: transform 0.3s ease;
+}
+
+.bone-icon img {
+    width: 24px;
+    height: 24px;
+    max-width: 24px;
+    max-height: 24px;
+    transition: transform 0.3s ease;
+}
+
+/* Rotation handling - rotate the bone but keep label outside rotation */
+.bone.vertical {
+    transform: rotate(90deg);
+}
+
+/* No need for counter-rotation since label is positioned absolutely */
+.bone.vertical .bone-label {
+    transform: none; /* No counter-rotation needed */
+}
+
+/* Selected bone styling - enhanced with multiple visual cues */
+.bone.selected {
+    outline: 3px solid #ffd700; /* Gold outline */
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    transform: scale(1.05);
+    background-color: #b07d5e; /* Lighter background when selected */
+}
+
+/* Keep the selected styling when vertical */
+.bone.vertical.selected {
+    transform: rotate(90deg) scale(1.05);
+}
+
+/* Make selected bone label more prominent */
+.bone.selected .bone-label {
+    font-weight: bolder;
+    color: #000000; /* Dark text for contrast */
+    text-shadow: 0px 0px 2px rgba(255, 215, 0, 0.7); /* Gold text shadow for better visibility */
+}
+
+/* Bones colors */
+.t-rex {
+    background-color: #7c533b;
+}
+
+.stegosaurus {
+    background-color: #8b6e45;
+}
+
+.triceratops {
+    background-color: #9e7b4d;
+}
+
+.velociraptor {
+    background-color: #b08c57;
+}
+
+.compsognathus {
+    background-color: #c19c61;
+}
+
+/* Button styling for rotate and random placement */
+#rotate-btn, #random-placement-btn {
+    background-color: #6b8e23;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+#rotate-btn:hover, #random-placement-btn:hover {
+    background-color: #7fa035;
+}
+
+#rotate-btn i, #random-placement-btn i {
+    font-size: 1em;
+}
+
+/* Complete bone celebration animation */
+.bone-complete-row {
+    position: relative;
+    z-index: 5;
+}
+
+.bone-complete {
+    animation: celebrateBone 1.5s ease-in-out;
+}

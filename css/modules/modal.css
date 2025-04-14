@@ -1,0 +1,171 @@
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+    background-color: #fff5e6;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    text-align: center;
+}
+
+.close {
+    color: #8b5a2b;
+    float: right;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#modal-title {
+    margin-bottom: 15px;
+}
+
+#modal-message {
+    margin-bottom: 20px;
+}
+
+/* Modal styles for start game popup */
+.start-game-modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.start-game-modal .modal-content {
+    background-color: #fff5e6;
+    margin: 20% auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    text-align: center;
+    animation: modalFadeIn 0.3s;
+}
+
+/* Modal button container and button styles */
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Add space between buttons */
+    margin-top: 20px;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+/* Style for the start digging button (green) */
+#confirm-start-btn {
+    background-color: #6b8e23; /* Green color */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    border: none;
+    transition: all 0.2s ease;
+    justify-content: center;
+}
+
+#confirm-start-btn::before {
+    content: '\f304'; /* Font Awesome shovel icon */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+}
+
+#confirm-start-btn:hover {
+    background-color: #5a7d12; /* Darker green on hover */
+    transform: scale(1.05);
+}
+
+/* Style for the adjust button (orange) */
+#cancel-start-btn {
+    background-color: #e67e22; /* Orange color */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    border: none;
+    transition: all 0.2s ease;
+    justify-content: center;
+}
+
+#cancel-start-btn::before {
+    content: '\f2f1'; /* Font Awesome edit icon */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+}
+
+#cancel-start-btn:hover {
+    background-color: #d35400; /* Darker orange on hover */
+    transform: scale(1.05);
+}
+
+/* Start overlay button */
+.start-overlay {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 50;
+    pointer-events: none; /* Allow clicks to pass through by default */
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.start-overlay.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all; /* Enable clicks when visible */
+}
+
+.start-overlay button {
+    background-color: #6b8e23;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.start-overlay button:hover:not(:disabled) {
+    background-color: #7fa035;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.start-overlay button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.start-overlay button:disabled {
+    background-color: #ccaa88;
+    cursor: not-allowed;
+    box-shadow: none;
+}
