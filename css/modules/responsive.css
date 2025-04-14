@@ -129,12 +129,18 @@
     
     /* When player grid is visible, hide computer grid */
     .board-container:first-child.visible {
-        display: block;
+        display: flex;
     }
     
     /* When player grid is visible, hide computer grid */
     .board-container:first-child.visible + .board-container {
         display: none;
+    }
+
+    .board-container {
+        height: 87dvh;
+        align-items: center;
+        justify-content: center;
     }
 }
 
@@ -158,6 +164,7 @@
     .game-area {
         padding-bottom: 45px;
     }
+    
 
     /* Hide player grid by default in game mode for mobile portrait */
     body.game-started .board-container:first-child {
