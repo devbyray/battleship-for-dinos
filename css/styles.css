@@ -147,7 +147,7 @@ body {
     flex-direction: column;
     min-height: 0; /* Important for flexbox */
     width: 100%;
-    height: 100%;
+    height: calc(60vh - 120px);
     max-width: 600px; /* Ensure grid containers don't get too wide */
 }
 
@@ -502,6 +502,21 @@ body {
     display: flex;
     align-items: center;
     position: relative;
+}
+
+/* Adding styles to control the size of bone icons */
+.bone-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+}
+
+.bone-icon img {
+    width: 24px;
+    height: 24px;
+    max-width: 24px;
+    max-height: 24px;
 }
 
 /* This ensures the bone itself is rotated but text stays horizontal */

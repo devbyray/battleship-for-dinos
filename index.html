@@ -1,127 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dino Digger: Bone Battle</title>
     <!-- Adding Font Awesome for bone icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/css/styles.css">
-</head>
-<body>
-    
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
     <div class="container">
-        <header class="top-bar">
-            <div class="top-bar-left">
-                <h1 id="game-title">Dino Digger: Bone Battle</h1>
-            </div>
-            <div class="top-bar-right">
-                <!-- Language switcher will be inserted here by JS -->
-                <button id="top-reset-btn" class="reset-icon-button" title="Reset Game">
-                    <i class="fas fa-undo-alt"></i>
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <h1 id="game-title">Dino Digger: Bone Battle</h1>
+        </div>
+        <div class="top-bar-right">
+          <!-- Language switcher will be inserted here by JS -->
+          <button
+            id="top-reset-btn"
+            class="reset-icon-button"
+            title="Reset Game"
+          >
+            <i class="fas fa-undo-alt"></i>
+          </button>
+        </div>
+      </header>
+
+      <div id="game-info">
+        <p id="game-description">
+          Find Barry Bones' dinosaur remains before the computer finds yours!
+        </p>
+        <div id="status-message">Place your dinosaur bones on the grid</div>
+      </div>
+
+      <div class="game-area">
+        <div class="board-container">
+          <h2 id="player-board-title">Your Excavation Site</h2>
+          <div class="grid-container">
+            <div id="player-grid" class="grid"></div>
+            <!-- Bones controls section positioned below player grid -->
+            <div class="bones-container">
+              <div id="player-bones" class="bones">
+                <div class="bone t-rex" data-size="5" draggable="true">
+                  <span class="bone-text">T-Rex (5)</span>
+                  <div class="bone-icon">
+                    <img
+                      src="/assets/images/dinosaur-2-svgrepo-com.svg"
+                      alt="T-Rex bone"
+                    />
+                  </div>
+                </div>
+                <div class="bone stegosaurus" data-size="4" draggable="true">
+                  <span class="bone-text">Stegosaurus (4)</span>
+                  <div class="bone-icon">
+                    <img
+                      src="/assets/images/dinosaur-animal-old-old-age-svgrepo-com.svg"
+                      alt="Stegosaurus bone"
+                    />
+                  </div>
+                </div>
+                <div class="bone triceratops" data-size="3" draggable="true">
+                  <span class="bone-text">Triceratops (3)</span>
+                  <div class="bone-icon">
+                    <img
+                      src="/assets/images/parasaurolophus-svgrepo-com.svg"
+                      alt="Triceratops bone"
+                    />
+                  </div>
+                </div>
+                <div class="bone velociraptor" data-size="3" draggable="true">
+                  <span class="bone-text">Velociraptor (3)</span>
+                  <div class="bone-icon">
+                    <img
+                      src="/assets/images/velociraptor-svgrepo-com.svg"
+                      alt="Velociraptor bone"
+                    />
+                  </div>
+                </div>
+                <div class="bone compsognathus" data-size="2" draggable="true">
+                  <span class="bone-text">Compsognathus (2)</span>
+                  <div class="bone-icon">
+                    <img
+                      src="/assets/images/dinosaur-shape-of-compsognathus-svgrepo-com.svg"
+                      alt="Compsognathus bone"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="bone-controls">
+                <button id="rotate-btn">
+                  <i class="fas fa-rotate"></i> Rotate
                 </button>
+                <button id="random-placement-btn">
+                  <i class="fas fa-random"></i> Random
+                </button>
+              </div>
             </div>
-        </header>
-
-        <div id="game-info">
-            <p id="game-description">Find Barry Bones' dinosaur remains before the computer finds yours!</p>
-            <div id="status-message">Place your dinosaur bones on the grid</div>
+          </div>
         </div>
 
-        <div class="game-area">
-            <div class="board-container">
-                <h2 id="player-board-title">Your Excavation Site</h2>
-                <div class="grid-container">
-                    <div id="player-grid" class="grid"></div>
-                </div>
-                <!-- Bones controls section positioned below player grid -->
-                <div class="bones-container">
-                    <div id="player-bones" class="bones">
-                        <div class="bone t-rex" data-size="5" draggable="true">
-                            <span class="bone-text">T-Rex (5)</span>
-                            <div class="bone-icon">
-                                <img src="/assets/images/dinosaur-2-svgrepo-com.svg" alt="T-Rex bone">
-                            </div>
-                        </div>
-                        <div class="bone stegosaurus" data-size="4" draggable="true">
-                            <span class="bone-text">Stegosaurus (4)</span>
-                            <div class="bone-icon">
-                                <img src="/assets/images/dinosaur-animal-old-old-age-svgrepo-com.svg" alt="Stegosaurus bone">
-                            </div>
-                        </div>
-                        <div class="bone triceratops" data-size="3" draggable="true">
-                            <span class="bone-text">Triceratops (3)</span>
-                            <div class="bone-icon">
-                                <img src="/assets/images/parasaurolophus-svgrepo-com.svg" alt="Triceratops bone">
-                            </div>
-                        </div>
-                        <div class="bone velociraptor" data-size="3" draggable="true">
-                            <span class="bone-text">Velociraptor (3)</span>
-                            <div class="bone-icon">
-                                <img src="/assets/images/velociraptor-svgrepo-com.svg" alt="Velociraptor bone">
-                            </div>
-                        </div>
-                        <div class="bone compsognathus" data-size="2" draggable="true">
-                            <span class="bone-text">Compsognathus (2)</span>
-                            <div class="bone-icon">
-                                <img src="/assets/images/dinosaur-shape-of-compsognathus-svgrepo-com.svg" alt="Compsognathus bone">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bone-controls">
-                        <button id="rotate-btn"><i class="fas fa-rotate"></i> Rotate</button>
-                        <button id="random-placement-btn"><i class="fas fa-random"></i> Random</button>
-                    </div>
-                </div>
-            </div>
+        <div class="board-container">
+          <h2 id="computer-board-title">Computer's Excavation Site</h2>
+          <div class="grid-container">
+            <div id="computer-grid" class="grid"></div>
+          </div>
+        </div>
+      </div>
 
-            <div class="board-container">
-                <h2 id="computer-board-title">Computer's Excavation Site</h2>
-                <div class="grid-container">
-                    <div id="computer-grid" class="grid"></div>
-                </div>
-            </div>
+      <!-- Game over modal -->
+      <div id="game-modal" class="modal">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <h2 id="modal-title">Game Over</h2>
+          <p id="modal-message"></p>
+          <button id="play-again-btn">Play Again</button>
         </div>
-        
-        <!-- Game over modal -->
-        <div id="game-modal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2 id="modal-title">Game Over</h2>
-                <p id="modal-message"></p>
-                <button id="play-again-btn">Play Again</button>
-            </div>
+      </div>
+
+      <!-- Start game modal -->
+      <div id="start-game-modal" class="start-game-modal">
+        <div class="modal-content">
+          <h2 id="start-modal-title">Ready to Dig!</h2>
+          <p id="start-modal-message">
+            All dinosaur bones are placed. Are you ready to start digging?
+          </p>
+          <div class="modal-buttons">
+            <button id="confirm-start-btn">Start Digging</button>
+            <button id="cancel-start-btn">Wait, I need to adjust</button>
+          </div>
         </div>
-        
-        <!-- Start game modal -->
-        <div id="start-game-modal" class="start-game-modal">
-            <div class="modal-content">
-                <h2 id="start-modal-title">Ready to Dig!</h2>
-                <p id="start-modal-message">All dinosaur bones are placed. Are you ready to start digging?</p>
-                <div class="modal-buttons">
-                    <button id="confirm-start-btn">Start Digging</button>
-                    <button id="cancel-start-btn">Wait, I need to adjust</button>
-                </div>
-            </div>
+      </div>
+
+      <!-- Ready to dig overlay button -->
+      <div id="start-overlay" class="start-overlay">
+        <button id="start-game-btn" disabled>Start Digging!</button>
+      </div>
+
+      <!-- Digging tools animation overlay -->
+      <div id="dig-animation" class="dig-animation-overlay">
+        <div class="dig-tool">
+          <svg width="100%" height="100%" viewBox="0 0 100 100">
+            <use href="#shovel-svg" />
+          </svg>
         </div>
-        
-        <!-- Ready to dig overlay button -->
-        <div id="start-overlay" class="start-overlay">
-            <button id="start-game-btn" disabled>Start Digging!</button>
-        </div>
-        
-        <!-- Digging tools animation overlay -->
-        <div id="dig-animation" class="dig-animation-overlay">
-            <div class="dig-tool">
-                <svg width="100%" height="100%" viewBox="0 0 100 100">
-                    <use href="#shovel-svg" />
-                </svg>
-            </div>
-        </div>
+      </div>
     </div>
-    
+
     <script type="module" src="/js/game.js"></script>
     <!-- Include confetti script -->
     <script src="node_modules/canvas-confetti/dist/confetti.browser.js"></script>
-</body>
+  </body>
 </html>
