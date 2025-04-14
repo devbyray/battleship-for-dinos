@@ -37,10 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusMessageElement = document.getElementById('status-message');
     const startOverlay = document.getElementById('start-overlay');
     
-    // Animation elements
-    const digAnimationOverlay = document.getElementById('dig-animation');
-    const digTool = document.querySelector('.dig-tool');
-    
     // Game over modal elements
     const gameOverModal = document.getElementById('game-modal');
     const modalTitle = document.getElementById('modal-title');
@@ -605,6 +601,44 @@ document.addEventListener('DOMContentLoaded', () => {
         updateStatusMessage(languageManager.getText('statusPlaceBones'));
     }
     
+    // Celebrate win with confetti animation
+    function celebrateWin() {
+        const duration = 3000;
+        const animationEnd = Date.now() + duration;
+        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+        
+        // Launch multiple waves of confetti
+        function randomInRange(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+        
+        const interval = setInterval(function() {
+            const timeLeft = animationEnd - Date.now();
+            
+            if (timeLeft <= 0) {
+                return clearInterval(interval);
+            }
+            
+            const particleCount = 50 * (timeLeft / duration);
+            
+            // Since they're launched from different positions, 
+            // these confetti particles will fall differently
+            confetti({
+                ...defaults,
+                particleCount,
+                origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+                colors: ['#3d1d94', '#57c26b', '#f2cd4a', '#ec5333', '#3d7aed']
+            });
+            
+            confetti({
+                ...defaults,
+                particleCount,
+                origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+                colors: ['#ed3dcc', '#c29d57', '#4af2d9', '#ec9e33', '#3ded7a']
+            });
+        }, 250);
+    }
+    
     // Handle player's dig attempt
     function handlePlayerDig(cell) {
         if (!gameState.isPlayerTurn || cell.classList.contains('hit') || cell.classList.contains('miss') || gameState.isAnimating) {
@@ -628,7 +662,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     bone.hits++;
                     gameState.playerHits++;
                     hitBone = bone;
-                    
                     break;
                 }
             }
@@ -640,18 +673,13 @@ document.addEventListener('DOMContentLoaded', () => {
             cell.classList.add('hit');
             
             // Check if the bone is completely excavated
-            if (hitBone.hits === hitBone.size) {
+            if (hitBone && hitBone.hits === hitBone.size) {
                 updateStatusMessage(languageManager.getText('completelyExcavated', boneName));
                 
                 // Highlight all cells of the completed bone
-                const bonePositions = hitBone.positions;
-                const boneCells = [];
-                
-                // Find all cells of this bone
-                bonePositions.forEach(pos => {
+                hitBone.positions.forEach(pos => {
                     const index = pos.row * GRID_SIZE + pos.col;
                     const boneCell = computerGrid.children[index];
-                    boneCells.push(boneCell);
                     boneCell.classList.add('bone-complete');
                 });
             } else {
@@ -664,6 +692,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Check if player won
         if (gameState.playerHits === gameState.totalBoneSegments) {
+            celebrateWin(); // Add confetti celebration when player wins
             endGame('player');
             gameState.isAnimating = false;
             return;

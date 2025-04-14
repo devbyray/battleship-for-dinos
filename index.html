@@ -34,6 +34,45 @@
                 <div class="grid-container">
                     <div id="player-grid" class="grid"></div>
                 </div>
+                <!-- Bones controls section positioned below player grid -->
+                <div class="bones-container">
+                    <div id="player-bones" class="bones">
+                        <div class="bone t-rex" data-size="5" draggable="true">
+                            <span class="bone-text">T-Rex (5)</span>
+                            <div class="bone-icon">
+                                <img src="/assets/images/dinosaur-2-svgrepo-com.svg" alt="T-Rex bone">
+                            </div>
+                        </div>
+                        <div class="bone stegosaurus" data-size="4" draggable="true">
+                            <span class="bone-text">Stegosaurus (4)</span>
+                            <div class="bone-icon">
+                                <img src="/assets/images/dinosaur-animal-old-old-age-svgrepo-com.svg" alt="Stegosaurus bone">
+                            </div>
+                        </div>
+                        <div class="bone triceratops" data-size="3" draggable="true">
+                            <span class="bone-text">Triceratops (3)</span>
+                            <div class="bone-icon">
+                                <img src="/assets/images/parasaurolophus-svgrepo-com.svg" alt="Triceratops bone">
+                            </div>
+                        </div>
+                        <div class="bone velociraptor" data-size="3" draggable="true">
+                            <span class="bone-text">Velociraptor (3)</span>
+                            <div class="bone-icon">
+                                <img src="/assets/images/velociraptor-svgrepo-com.svg" alt="Velociraptor bone">
+                            </div>
+                        </div>
+                        <div class="bone compsognathus" data-size="2" draggable="true">
+                            <span class="bone-text">Compsognathus (2)</span>
+                            <div class="bone-icon">
+                                <img src="/assets/images/dinosaur-shape-of-compsognathus-svgrepo-com.svg" alt="Compsognathus bone">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bone-controls">
+                        <button id="rotate-btn"><i class="fas fa-rotate"></i> Rotate</button>
+                        <button id="random-placement-btn"><i class="fas fa-random"></i> Random</button>
+                    </div>
+                </div>
             </div>
 
             <div class="board-container">
@@ -41,45 +80,6 @@
                 <div class="grid-container">
                     <div id="computer-grid" class="grid"></div>
                 </div>
-            </div>
-        </div>
-
-        <div class="bones-container">
-            <div id="player-bones" class="bones">
-                <div class="bone t-rex" data-size="5" draggable="true">
-                    T-Rex (5)
-                    <div class="bone-icon">
-                        <img src="/assets/images/dinosaur-2-svgrepo-com.svg" alt="T-Rex bone">
-                    </div>
-                </div>
-                <div class="bone stegosaurus" data-size="4" draggable="true">
-                    Stegosaurus (4)
-                    <div class="bone-icon">
-                        <img src="/assets/images/dinosaur-animal-old-old-age-svgrepo-com.svg" alt="Stegosaurus bone">
-                    </div>
-                </div>
-                <div class="bone triceratops" data-size="3" draggable="true">
-                    Triceratops (3)
-                    <div class="bone-icon">
-                        <img src="/assets/images/parasaurolophus-svgrepo-com.svg" alt="Triceratops bone">
-                    </div>
-                </div>
-                <div class="bone velociraptor" data-size="3" draggable="true">
-                    Velociraptor (3)
-                    <div class="bone-icon">
-                        <img src="/assets/images/velociraptor-svgrepo-com.svg" alt="Velociraptor bone">
-                    </div>
-                </div>
-                <div class="bone compsognathus" data-size="2" draggable="true">
-                    Compsognathus (2)
-                    <div class="bone-icon">
-                        <img src="/assets/images/dinosaur-shape-of-compsognathus-svgrepo-com.svg" alt="Compsognathus bone">
-                    </div>
-                </div>
-            </div>
-            <div class="bone-controls">
-                <button id="rotate-btn">Rotate Bone</button>
-                <button id="random-placement-btn">Random Placement</button>
             </div>
         </div>
         
@@ -121,5 +121,7 @@
     </div>
     
     <script type="module" src="/js/game.js"></script>
+    <!-- Include confetti script -->
+    <script src="node_modules/canvas-confetti/dist/confetti.browser.js"></script>
 </body>
 </html>
