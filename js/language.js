@@ -102,36 +102,48 @@ class LanguageManager {
     
     // Initialize language switcher
     initLanguageSwitcher() {
-        document.addEventListener('DOMContentLoaded', () => {
-            // Create language switcher
-            const languageContainer = document.createElement('div');
-            languageContainer.className = 'language-switcher';
-            languageContainer.innerHTML = `
-                <span id="language-label"></span>
-                <select id="language-select">
-                    <option value="en">English</option>
-                    <option value="nl">Nederlands</option>
-                </select>
-            `;
-            
-            // Add switcher to the top bar
-            const topBar = document.querySelector('.top-bar');
-            if (topBar) {
-                topBar.appendChild(languageContainer);
-            }
-            
-            // Set selected language
-            const select = document.getElementById('language-select');
+        // Create language switcher
+        const languageContainer = document.createElement('div');
+        languageContainer.className = 'language-switcher';
+        languageContainer.innerHTML = `
+            <span id="language-label"></span>
+            <select id="language-select">
+                <option value="en">English</option>
+                <option value="nl">Nederlands</option>
+            </select>
+        `;
+        
+        // Add switcher to the top bar after DOM is loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                this.appendLanguageSwitcher(languageContainer);
+            });
+        } else {
+            // DOM already loaded
+            this.appendLanguageSwitcher(languageContainer);
+        }
+    }
+    
+    appendLanguageSwitcher(languageContainer) {
+        // Add switcher to the top bar
+        const topBar = document.querySelector('.top-bar');
+        if (topBar) {
+            topBar.appendChild(languageContainer);
+        }
+        
+        // Set selected language
+        const select = document.getElementById('language-select');
+        if (select) {
             select.value = this.currentLanguage;
             
             // Add change event
             select.addEventListener('change', (e) => {
                 this.setLanguage(e.target.value);
             });
-            
-            // Update language label
-            this.updateElement('language-label', 'languageSwitcher');
-        });
+        }
+        
+        // Update language label
+        this.updateElement('language-label', 'languageSwitcher');
     }
     
     // Get text for the current language
@@ -167,7 +179,9 @@ class LanguageManager {
     
     // Update all text on the page
     updatePageLanguage() {
-        document.title = this.getText('gameTitle');
+        if (document.title) {
+            document.title = this.getText('gameTitle');
+        }
         
         // Update header elements
         this.updateElement('game-title', 'gameTitle');
@@ -185,7 +199,7 @@ class LanguageManager {
         this.updateElement('rotate-btn', 'rotateBoneBtn');
         this.updateElement('random-placement-btn', 'randomPlacementBtn');
         this.updateElement('start-game-btn', 'startGameBtn');
-        this.updateElement('reset-game-btn', 'resetGameBtn');
+        this.updateElement('top-reset-btn', 'resetGameBtn');
         
         // Update modal elements
         this.updateElement('modal-title', 'modalGameOver');
@@ -205,28 +219,51 @@ class LanguageManager {
             if (boneClass) {
                 const boneName = boneClass.replace('-', '');
                 const size = bone.dataset.size;
+                const boneIconElement = bone.querySelector('.bone-icon');
+                let originalText = '';
                 
                 switch (boneName) {
                     case 'trex':
-                        bone.textContent = `${this.getText('tRex')} (${size})`;
+                        originalText = `${this.getText('tRex')} (${size})`;
                         break;
                     case 'stegosaurus':
-                        bone.textContent = `${this.getText('stegosaurus')} (${size})`;
+                        originalText = `${this.getText('stegosaurus')} (${size})`;
                         break;
                     case 'triceratops':
-                        bone.textContent = `${this.getText('triceratops')} (${size})`;
+                        originalText = `${this.getText('triceratops')} (${size})`;
                         break;
                     case 'velociraptor':
-                        bone.textContent = `${this.getText('velociraptor')} (${size})`;
+                        originalText = `${this.getText('velociraptor')} (${size})`;
                         break;
                     case 'compsognathus':
-                        bone.textContent = `${this.getText('compsognathus')} (${size})`;
+                        originalText = `${this.getText('compsognathus')} (${size})`;
                         break;
+                }
+                
+                // Set text content without affecting the bone-icon
+                const textNode = Array.from(bone.childNodes)
+                    .find(node => node.nodeType === Node.TEXT_NODE);
+                
+                if (textNode) {
+                    textNode.textContent = originalText;
+                } else if (boneIconElement) {
+                    // Insert text before bone icon
+                    bone.insertBefore(document.createTextNode(originalText), boneIconElement);
+                } else {
+                    bone.textContent = originalText;
                 }
             }
         });
     }
 }
 
-// Create global instance
+// Create instance
 const languageManager = new LanguageManager();
+
+// Make it available globally for legacy code
+if (typeof window !== 'undefined') {
+    window.languageManager = languageManager;
+}
+
+// Export for ES modules
+export default languageManager;

@@ -1,3 +1,6 @@
+// Import language manager
+import languageManager from './language.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     // Game Configuration
     const GRID_SIZE = 10;
