@@ -575,34 +575,63 @@ body.game-started .bones-container {
     }
 }
 
-/* Toggle button for player grid visibility on mobile */
+/* Toggle button styles - visible on mobile at all times */
 .toggle-player-grid-btn {
-    display: none; /* Hidden by default, shown only on mobile */
+    display: none; /* Hidden by default on desktop */
     position: fixed;
-    z-index: 50;
-    bottom: 70px;
-    right: 15px;
+    bottom: 20px;
+    right: 20px;
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: #8b5a2b;
-    color: white;
-    font-size: 1.5rem;
-    border: none;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    display: flex;
+    background-color: #f8d8a8;
+    color: #3a2b1b;
+    border: 2px solid #3a2b1b;
+    font-size: 24px;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
-}
-
-.toggle-player-grid-btn:hover {
-    background-color: #a26b33;
-    transform: scale(1.05);
+    z-index: 50;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
 }
 
 .toggle-player-grid-btn.active {
-    background-color: #6b8e23;
+    background-color: #3a2b1b;
+    color: #f8d8a8;
+}
+
+.toggle-player-grid-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Mobile portrait mode styles */
+@media screen and (max-width: 768px) {
+    /* Always show the toggle button on mobile */
+    .toggle-player-grid-btn {
+        display: flex !important;
+    }
+    
+    /* Board container layout for mobile - switch between boards instead of overlay */
+    .board-container {
+        width: 100% !important;
+        max-width: none !important;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    
+    /* Hide player grid by default on mobile */
+    .board-container:first-child {
+        display: none;
+    }
+    
+    /* When player grid is visible, hide computer grid */
+    .board-container:first-child.visible {
+        display: block;
+    }
+    
+    /* When player grid is visible, hide computer grid */
+    .board-container:first-child.visible + .board-container {
+        display: none;
+    }
 }
 
 /* Player grid styles */

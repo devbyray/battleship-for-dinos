@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         createGrid(computerGrid, 'computer');
         addEventListeners();
         setupBoneSelection();
+        initTogglePlayerGridButton(); // Initialize toggle button right away
         
         // Force language update after all elements are created
         if (window.languageManager) {
@@ -145,15 +146,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function getIconPathForBone(boneName) {
         switch(boneName) {
             case 'T-Rex':
-                return './assets/images/dinosaur-2-svgrepo-com.svg';
+                return '/assets/images/dinosaur-2-svgrepo-com.svg';
             case 'Stegosaurus':
-                return './assets/images/dinosaur-animal-old-old-age-svgrepo-com.svg';
+                return '/assets/images/dinosaur-animal-old-old-age-svgrepo-com.svg';
             case 'Triceratops':
-                return './assets/images/parasaurolophus-svgrepo-com.svg';
+                return '/assets/images/parasaurolophus-svgrepo-com.svg';
             case 'Velociraptor':
-                return './assets/images/velociraptor-svgrepo-com.svg';
+                return '/assets/images/velociraptor-svgrepo-com.svg';
             case 'Compsognathus':
-                return './assets/images/dinosaur-shape-of-compsognathus-svgrepo-com.svg';
+                return '/assets/images/dinosaur-shape-of-compsognathus-svgrepo-com.svg';
             default:
                 return null;
         }
@@ -588,34 +589,9 @@ document.addEventListener('DOMContentLoaded', () => {
         updateStatusMessage(languageManager.getText('statusPlaceBones'));
     }
     
-    // Start the game
-    function startGame() {
-        if (gameState.playerBonesPlaced.length !== bones.length) {
-            updateStatusMessage(languageManager.getText('needAllBones'));
-            return;
-        }
-        
-        gameState.isGameStarted = true;
-        placeComputerBones();
-        
-        // Add 'game-started' class to body to trigger CSS changes for grid sizes
-        document.body.classList.add('game-started');
-        
-        // Disable bone selection and placement controls
-        rotateBtn.disabled = true;
-        randomPlacementBtn.disabled = true;
-        
-        // Hide the start overlay
-        toggleStartOverlay(false);
-        
-        // Initialize toggle button for player grid on mobile
-        initTogglePlayerGridButton();
-        
-        updateStatusMessage(languageManager.getText('gameStarted'));
-    }
-    
-    // Reset the game
+    // Reset the entire game to initial state
     function resetGame() {
+        // Reset game state
         gameState = {
             isGameStarted: false,
             isPlayerTurn: true,
@@ -629,24 +605,94 @@ document.addEventListener('DOMContentLoaded', () => {
             isAnimating: false
         };
         
-        // Reset both grids
+        // Reset visual elements
         resetPlayerGrid();
         
+        // Clear computer grid
         const computerCells = computerGrid.querySelectorAll('.cell');
         computerCells.forEach(cell => {
-            cell.classList.remove('hit', 'miss', 'animated', 'bone-complete');
+            cell.classList.remove('hit', 'miss', 'bone-complete');
         });
         
-        // Remove bone-complete-row class from parent elements
-        document.querySelectorAll('.bone-complete-row').forEach(el => {
-            el.classList.remove('bone-complete-row');
-        });
-        
-        // Enable controls
+        // Enable placement controls
         rotateBtn.disabled = false;
         randomPlacementBtn.disabled = false;
         
+        // Remove game-started class from body
+        document.body.classList.remove('game-started');
+        
+        // Reset visibility of grids for mobile
+        const playerBoardContainer = document.querySelector('.board-container:first-child');
+        const computerBoardContainer = document.querySelector('.board-container:last-child');
+        
+        if (window.innerWidth <= 768) {
+            playerBoardContainer.classList.remove('visible');
+            computerBoardContainer.style.display = 'block';
+        } else {
+            playerBoardContainer.style.display = 'block';
+            computerBoardContainer.style.display = 'block';
+        }
+        
+        // Reset toggle button
+        const togglePlayerGridBtn = document.getElementById('toggle-player-grid-btn');
+        if (togglePlayerGridBtn) {
+            togglePlayerGridBtn.classList.remove('active');
+            const icon = togglePlayerGridBtn.querySelector('i');
+            if (icon) {
+                icon.className = 'fas fa-eye';
+            }
+        }
+        
+        // Update status message
         updateStatusMessage(languageManager.getText('statusPlaceBones'));
+    }
+    
+    // Start the game
+    function startGame() {
+        if (gameState.playerBonesPlaced.length < bones.length) {
+            updateStatusMessage(languageManager.getText('needAllBones'));
+            return;
+        }
+        
+        // Add game-started class to body for CSS transitions
+        document.body.classList.add('game-started');
+        
+        // Reset grids for gameplay
+        gameState.isGameStarted = true;
+        gameState.playerHits = 0;
+        gameState.computerHits = 0;
+        
+        // Hide and disable bone selection controls
+        rotateBtn.disabled = true;
+        randomPlacementBtn.disabled = true;
+        
+        // Hide the start overlay
+        toggleStartOverlay(false);
+        
+        // Place computer's bones randomly
+        placeComputerBones();
+        
+        // Update toggle button visibility on game start
+        const togglePlayerGridBtn = document.getElementById('toggle-player-grid-btn');
+        const playerBoardContainer = document.querySelector('.board-container:first-child');
+        const computerBoardContainer = document.querySelector('.board-container:last-child');
+        
+        // On mobile, make sure we're showing the computer grid by default at game start
+        if (window.innerWidth <= 768) {
+            playerBoardContainer.classList.remove('visible');
+            computerBoardContainer.style.display = 'block';
+            
+            if (togglePlayerGridBtn) {
+                const icon = togglePlayerGridBtn.querySelector('i');
+                if (icon) {
+                    icon.className = 'fas fa-eye';
+                }
+                togglePlayerGridBtn.classList.remove('active');
+            }
+        }
+        
+        // Update status message
+        updateStatusMessage(languageManager.getText('gameStarted'));
     }
     
     // Celebrate win with confetti animation
@@ -922,25 +968,66 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Toggle player grid visibility in mobile mode
     function initTogglePlayerGridButton() {
-        const toggleBtn = document.getElementById('toggle-player-grid-btn');
-        const playerBoard = document.querySelector('.board-container:first-child');
+        const togglePlayerGridBtn = document.getElementById('toggle-player-grid-btn');
+        const playerBoardContainer = document.querySelector('.board-container:first-child');
+        const computerBoardContainer = document.querySelector('.board-container:last-child');
         
-        if (!toggleBtn || !playerBoard) return;
-        
-        toggleBtn.addEventListener('click', () => {
-            // Toggle visible class on player board
-            playerBoard.classList.toggle('visible');
-            // Toggle active class on button
-            toggleBtn.classList.toggle('active');
-            
-            // Change icon based on visibility
-            const icon = toggleBtn.querySelector('i');
-            if (playerBoard.classList.contains('visible')) {
-                icon.className = 'fas fa-eye-slash'; // Hidden icon
-            } else {
-                icon.className = 'fas fa-eye'; // Show icon
+        if (togglePlayerGridBtn && playerBoardContainer) {
+            // Set initial state
+            const icon = togglePlayerGridBtn.querySelector('i');
+            if (icon) {
+                icon.className = 'fas fa-eye';
             }
-        });
+            
+            // Add the click handler for toggling between grids
+            togglePlayerGridBtn.addEventListener('click', () => {
+                playerBoardContainer.classList.toggle('visible');
+                togglePlayerGridBtn.classList.toggle('active');
+                
+                // Update icon based on visibility
+                if (icon) {
+                    if (playerBoardContainer.classList.contains('visible')) {
+                        icon.className = 'fas fa-eye-slash'; // Change to "hide" icon
+                    } else {
+                        icon.className = 'fas fa-eye'; // Change to "show" icon
+                    }
+                }
+                
+                // Check if we need to update the computer grid visibility
+                if (window.innerWidth <= 768) {
+                    if (playerBoardContainer.classList.contains('visible')) {
+                        // Hide computer grid when player grid is visible
+                        computerBoardContainer.style.display = 'none';
+                    } else {
+                        // Show computer grid when player grid is hidden
+                        computerBoardContainer.style.display = 'block';
+                    }
+                }
+            });
+            
+            // Make sure toggle button is visible regardless of game state on mobile
+            if (window.innerWidth <= 768) {
+                togglePlayerGridBtn.style.display = 'flex';
+            }
+            
+            // Handle window resize events
+            window.addEventListener('resize', () => {
+                if (window.innerWidth <= 768) {
+                    togglePlayerGridBtn.style.display = 'flex';
+                    
+                    // Reset computer grid display when resizing
+                    if (!playerBoardContainer.classList.contains('visible')) {
+                        computerBoardContainer.style.display = 'block';
+                    } else {
+                        computerBoardContainer.style.display = 'none';
+                    }
+                } else {
+                    // On larger screens, both grids can be visible
+                    playerBoardContainer.style.display = 'block';
+                    computerBoardContainer.style.display = 'block';
+                }
+            });
+        }
     }
     
     // Initialize the game
