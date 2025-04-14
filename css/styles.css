@@ -288,7 +288,7 @@ body {
 
 /* During placement phase, make player grid bigger */
 body:not(.game-started) .board-container:first-child {
-    max-width: 600px; /* Player grid is larger during placement */
+    max-width: 700px; /* Player grid is larger during placement */
     width: 100%;
     order: 1; /* Place it prominently */
 }
@@ -302,7 +302,7 @@ body:not(.game-started) .board-container:last-child {
 
 /* During gameplay phase, make computer grid bigger */
 body.game-started .board-container:last-child {
-    max-width: 600px; /* Computer grid becomes larger during gameplay */
+    max-width: 700px; /* Computer grid becomes larger during gameplay */
     width: 100%;
     order: 1; /* Place it prominently */
     opacity: 1;
