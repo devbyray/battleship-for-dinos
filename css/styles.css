@@ -14,122 +14,18 @@ html, body {
 
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #8cc63f;
-    /* Using CSS gradients instead of background image for the prehistoric look */
-    background-image: 
-        linear-gradient(to bottom, rgba(140, 198, 63, 0.8), rgba(92, 138, 40, 0.9)),
-        radial-gradient(circle at 20% 80%, #a7d350 10%, transparent 20%),
-        radial-gradient(circle at 50% 90%, #a7d350 5%, transparent 15%),
-        radial-gradient(circle at 80% 85%, #a7d350 8%, transparent 18%);
     color: #4a3520;
     line-height: 1.6;
     display: flex;
     flex-direction: column;
     position: relative; /* For absolute positioning of decorative elements */
-}
-
-/* Prehistoric landscape SVG background */
-.prehistoric-landscape {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 25vh;
-    z-index: 0;
-    pointer-events: none;
-}
-
-/* Decorative dinosaur elements */
-.dino-decoration {
-    position: absolute;
-    pointer-events: none; /* Don't interfere with clicks */
-    z-index: 1;
-}
-
-.dino-decoration img {
-    width: 100%;
-    height: 100%;
-    filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.3));
-}
-
-.dino-decoration.top-left {
-    top: 50px;
-    left: 10px;
-    width: 120px;
-    height: 120px;
-    animation: bounce 6s ease-in-out infinite;
-}
-
-.dino-decoration.bottom-right {
-    bottom: 20px;
-    right: 10px;
-    width: 150px;
-    height: 150px;
-    animation: sway 8s ease-in-out infinite;
-}
-
-.dino-decoration.top-right {
-    top: 30px;
-    right: 15px;
-    width: 100px;
-    height: 100px;
-    animation: bounce 7s ease-in-out infinite 0.5s;
-}
-
-.dino-decoration.bottom-left {
-    bottom: 15px;
-    left: 15px;
-    width: 130px;
-    height: 130px;
-    animation: sway 7.5s ease-in-out infinite 0.7s;
-}
-
-.dino-decoration.center-left {
-    top: 50%;
-    left: 5px;
-    width: 80px;
-    height: 80px;
-    transform: translateY(-50%);
-    animation: sideBounce 5s ease-in-out infinite;
-}
-
-.dino-decoration.center-right {
-    top: 45%;
-    right: 5px;
-    width: 90px;
-    height: 90px;
-    transform: translateY(-50%) scaleX(-1); /* Flip horizontally */
-    animation: sideBounce 6s ease-in-out infinite 0.3s;
-}
-
-.dino-decoration.top-center {
-    top: 10px;
-    left: 50%;
-    width: 70px;
-    height: 70px;
-    transform: translateX(-50%);
-    animation: smallBounce 4s ease-in-out infinite 1s;
-}
-
-/* Dinosaur animations */
-@keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-20px); }
-}
-
-@keyframes sway {
-    0%, 100% { transform: rotate(-5deg); }
-    50% { transform: rotate(5deg); }
-}
-
-@keyframes sideBounce {
-    0%, 100% { transform: translateY(-50%) translateX(0); }
-    50% { transform: translateY(-50%) translateX(10px); }
-}
-
-@keyframes smallBounce {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(-10px); }
+    
+    /* Added landscape background image */
+    background-image: url('../assets/images/landscape-bg.png');
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 .container {
@@ -143,6 +39,25 @@ body {
     overflow: hidden;
     position: relative;
     z-index: 2; /* Above decoration elements */
+}
+
+/* Additional responsive adjustments for the container and layout */
+@media (min-width: 1600px) {
+    .container {
+        max-width: 1800px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        background-position: center center; /* Adjust background position for mobile */
+    }
+    
+    .container {
+        height: 100%;
+        overflow-y: auto; /* Allow scrolling on very small screens if needed */
+    }
 }
 
 /* Top bar styles */
@@ -210,12 +125,15 @@ body {
 .game-area {
     display: flex;
     gap: 10px;
-    justify-content: space-between;
+    justify-content: center; /* Center the grids horizontally */
     padding: 10px;
     flex: 1;
     min-height: 0;
     overflow: hidden;
-    height: calc(60vh - 40px); /* Use fixed height instead of max-height */
+    height: calc(60vh - 40px);
+    width: 100%;
+    max-width: 1600px; /* Set a max width for very wide screens */
+    margin: 0 auto; /* Center the game area in wide screens */
 }
 
 /* Grid container and grid */
@@ -230,6 +148,7 @@ body {
     min-height: 0; /* Important for flexbox */
     width: 100%;
     height: 100%;
+    max-width: 600px; /* Ensure grid containers don't get too wide */
 }
 
 .grid {
@@ -263,6 +182,18 @@ body {
 
 /* Responsive grid adjustments */
 @media (max-width: 768px) {
+    .game-area {
+        flex-direction: column; /* Stack the grids on mobile/tablet */
+        align-items: center; /* Center the grids horizontally */
+        gap: 20px;
+        height: auto; /* Allow height to adjust based on content */
+        padding: 15px 10px;
+    }
+    
+    .grid-container {
+        max-height: 45vh; /* Limit height to prevent overflow */
+    }
+    
     .grid {
         max-width: 350px;
         max-height: 350px;
@@ -539,6 +470,25 @@ body {
     flex-wrap: wrap;
     justify-content: flex-end;
     flex: 1;
+}
+
+/* Responsive adjustments for bone selection area */
+@media (max-width: 600px) {
+    .bones-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .bones {
+        flex: none;
+        width: 100%;
+    }
+    
+    .bone-controls {
+        flex: none;
+        width: 100%;
+        justify-content: center;
+    }
 }
 
 /* Bone item icons */
