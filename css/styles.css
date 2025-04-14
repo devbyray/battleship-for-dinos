@@ -284,6 +284,37 @@ body {
     display: flex;
     flex-direction: column;
     width: 100%;
+    align-items: center; /* Center grid horizontally */
+    justify-content: center; /* Center grid vertically */
+    height: auto; /* Allow container to expand based on content */
+    /*min-height: 100%; /* Ensure it takes at least the full available height */
+    position: relative; /* Important for proper positioning */
+    box-sizing: border-box; /* Include padding in height calculation */
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr); /* Use 1fr instead of fixed sizes for better scaling */
+    grid-template-rows: repeat(10, 1fr);
+    gap: 2px;
+    width: 100%;
+    aspect-ratio: 1/1; /* Maintain square ratio */
+    margin: 0 auto; /* Center the grid in its container */
+}
+
+/* Adding cell styling to make grid blocks visible */
+.cell {
+    border: 1px solid #b08c57;
+    background-color: #f2d9a9;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.cell:hover {
+    background-color: #e6c389;
+    transform: scale(0.95);
 }
 
 /* During placement phase, make player grid bigger */
@@ -317,26 +348,6 @@ body.game-started .board-container:first-child {
 /* During gameplay phase, hide the bones container */
 body.game-started .bones-container {
     display: none;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(10, 1fr); /* Use 1fr instead of fixed sizes for better scaling */
-    grid-template-rows: repeat(10, 1fr);
-    gap: 2px;
-    width: 100%;
-    aspect-ratio: 1/1; /* Maintain square ratio */
-}
-
-.cell {
-    background-color: #e6c389;
-    border-radius: 3px;
-    transition: all 0.2s ease;
-    cursor: pointer;
-    position: relative;
-    aspect-ratio: 1/1; /* Keep cells square */
-    min-width: auto; /* Remove min-width constraint */
-    max-width: none; /* Remove max-width constraint */
 }
 
 /* Responsive grid adjustments - streamlined for clarity */
@@ -376,7 +387,6 @@ body.game-started .bones-container {
         max-width: 100%;
         width: 95%;
         order: 1; /* Place at the top */
-        transform: scale(0.8);
         transform-origin: top center;
         margin-bottom: -40px; /* Reduce the space it takes up */
     }
@@ -398,7 +408,6 @@ body.game-started .bones-container {
         max-width: 100%;
         width: 80%;
         order: 2;
-        transform: scale(0.8);
         transform-origin: top center;
         margin-bottom: -30px;
     }
@@ -430,7 +439,6 @@ body.game-started .bones-container {
         display: none;
         max-width: 100%;
         width: 95%;
-        transform: scale(0.8);
         transform-origin: top center;
         margin-bottom: -40px;
         order: 1;
@@ -490,10 +498,10 @@ body.game-started .bones-container {
         left: 50%;
         transform: translate(-50%, -50%);
         z-index: 40;
-        background-color: rgba(248, 216, 168, 0.95);
+        /* background-color: rgba(248, 216, 168, 0.95); */
         padding: 15px;
         border-radius: 8px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); */
         width: 90%;
         max-width: 400px;
     }
@@ -579,7 +587,7 @@ body.game-started .bones-container {
 .toggle-player-grid-btn {
     display: none; /* Hidden by default on desktop */
     position: fixed;
-    bottom: 20px;
+    bottom: 60px;
     right: 20px;
     width: 50px;
     height: 50px;
@@ -1260,7 +1268,6 @@ button:disabled {
     .board-container {
         max-width: none;
         aspect-ratio: 1/1;
-        max-height: calc(40vh - 20px);
     }
     
     .grid-container {

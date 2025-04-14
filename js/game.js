@@ -1006,9 +1006,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             
             // Make sure toggle button is visible regardless of game state on mobile
-            if (window.innerWidth <= 768) {
-                togglePlayerGridBtn.style.display = 'flex';
-            }
+            // if (window.innerWidth <= 768) {
+            //     togglePlayerGridBtn.style.display = 'flex';
+            // }
             
             // Handle window resize events
             window.addEventListener('resize', () => {
