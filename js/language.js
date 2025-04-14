@@ -14,7 +14,7 @@ const languages = {
         rotateBoneBtn: "Rotate Bone",
         randomPlacementBtn: "Random Placement",
         startGameBtn: "Start Digging!",
-        resetGameBtn: "Reset Game",
+        // resetGameBtn: "Reset Game",
         modalGameOver: "Game Over",
         modalCongrats: "Congratulations!",
         modalWinMessage: "You've successfully excavated all the dinosaur bones! You're a master paleontologist!",
@@ -57,7 +57,6 @@ const languages = {
         rotateBoneBtn: "Bot Draaien",
         randomPlacementBtn: "Willekeurige Plaatsing",
         startGameBtn: "Begin met Graven!",
-        resetGameBtn: "Spel Resetten",
         modalGameOver: "Spel Voorbij",
         modalCongrats: "Gefeliciteerd!",
         modalWinMessage: "Je hebt alle dinosaurusbotten succesvol opgegraven! Je bent een meesterlijke paleontoloog!",
@@ -199,7 +198,7 @@ class LanguageManager {
         this.updateButtonWithIcon('rotate-btn', 'rotateBoneBtn', 'fa-rotate');
         this.updateElement('random-placement-btn', 'randomPlacementBtn');
         this.updateElement('start-game-btn', 'startGameBtn');
-        this.updateButtonWithIcon('top-reset-btn', 'resetGameBtn', 'fa-undo-alt');
+        // this.updateButtonWithIcon('top-reset-btn', 'resetGameBtn', 'fa-undo-alt');
         
         // Update modal elements
         this.updateElement('modal-title', 'modalGameOver');

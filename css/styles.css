@@ -14,7 +14,7 @@ html, body {
 
 body {
     font-family: 'Arial', sans-serif;
-    color: #4a3520;
+    color: #000000;
     line-height: 1.6;
     display: flex;
     flex-direction: column;
@@ -228,6 +228,7 @@ body {
 }
 
 .reset-icon-button:hover {
+    box-shadow: none;
     transform: rotate(30deg);
 }
 
@@ -240,6 +241,7 @@ body {
 
 /* Game info area */
 #game-info {
+
     background-color: #fff5e6;
     padding: 5px;
     border-radius: 0;
@@ -273,6 +275,12 @@ body {
     width: 100%;
     max-width: 600px;
     transition: all 0.3s ease; /* Smooth transition between sizes */
+    background-color: #f8d8a8;
+    border-radius: 8px;
+}
+
+.board-container h2 {
+    padding: 0 5px;
 }
 
 /* Grid container during different game phases */
@@ -280,7 +288,6 @@ body {
     background-color: #f8d8a8;
     padding: 8px;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(139, 90, 43, 0.2);
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -415,11 +422,10 @@ body.game-started .bones-container {
     /* Move top-bar to bottom on mobile */
     .top-bar {
         order: 3; /* Move to bottom of flex container */
-        position: fixed;
-        bottom: 0;
+        position: sticky;
+        top: 0; 
         left: 0;
-        right: 0;
-        top: auto;
+        width: 100%;
         box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
         z-index: 40;
     }
@@ -465,8 +471,11 @@ body.game-started .bones-container {
     
     /* Game info adjustment */
     #game-info {
-        order: 1; /* Keep at top */
-        margin-bottom: 10px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding-bottom: 0.8rem;
     }
     
     /* Move top-bar to bottom on mobile portrait mode during gameplay */
@@ -555,7 +564,7 @@ body.game-started .bones-container {
     /* Style toggle button for player grid */
     .toggle-player-grid-btn {
         position: fixed;
-        bottom: 50px;
+        bottom: 80px;
         right: 10px;
         width: 40px;
         height: 40px;
@@ -587,7 +596,7 @@ body.game-started .bones-container {
 .toggle-player-grid-btn {
     display: none; /* Hidden by default on desktop */
     position: fixed;
-    bottom: 60px;
+    bottom: 80px;
     right: 20px;
     width: 50px;
     height: 50px;
@@ -872,7 +881,7 @@ body.game-started .bones-container {
     background-color: #a5694f;
     color: white;
     border-radius: 5px;
-    cursor: grab;
+    cursor: pointer;
     user-select: none;
     min-width: 80px;
     display: flex;
@@ -881,6 +890,11 @@ body.game-started .bones-container {
     justify-content: center;
     position: relative;
     transition: transform 0.3s ease, background-color 0.2s;
+}
+
+.bone.placed {
+    color: #fff;
+    background-color: #c65102;
 }
 
 /* Bone label styles - fixed to prevent rotation */
@@ -966,6 +980,9 @@ body.game-started .bones-container {
         max-width: 20px;
         max-height: 20px;
     }
+    .bone-text {
+        display: none; /* Hide text on very small screens */
+    }
 }
 
 @media (max-width: 480px) {
@@ -973,6 +990,7 @@ body.game-started .bones-container {
         padding: 4px 6px;
         min-width: 60px;
     }
+    
     
     .bone-label {
         font-size: 0.8em;
@@ -1212,7 +1230,7 @@ button:disabled {
 /* Start overlay button */
 .start-overlay {
     position: fixed;
-    bottom: 20px;
+    top: 50px;
     left: 0;
     right: 0;
     text-align: center;
