@@ -598,6 +598,9 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState.isGameStarted = true;
         placeComputerBones();
         
+        // Add 'game-started' class to body to trigger CSS changes for grid sizes
+        document.body.classList.add('game-started');
+        
         // Disable bone selection and placement controls
         rotateBtn.disabled = true;
         randomPlacementBtn.disabled = true;

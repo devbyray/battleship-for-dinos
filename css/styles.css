@@ -69,37 +69,44 @@ body {
     .container {
         height: auto;
         min-height: 100vh;
+        padding: 0 5px; /* Add padding for narrower screens */
     }
     
     .game-area {
         flex-direction: column;
         align-items: center;
         gap: 10px;
-        padding: 5px;
+        padding: 5px 0;
         overflow-y: auto;
     }
     
-    .grid-container {
-        min-width: unset;
+    /* Simplify size differences on mobile but maintain the priority */
+    body:not(.game-started) .board-container:first-child,
+    body.game-started .board-container:last-child {
         width: 95%;
-        max-width: 500px;
-        margin: 0 auto;
+        max-width: none;
+        padding: 5px;
+    }
+    
+    body:not(.game-started) .board-container:last-child,
+    body.game-started .board-container:first-child {
+        width: 85%;
+        max-width: none;
+        padding: 5px;
+    }
+    
+    .grid-container {
+        width: 95%;
+        max-width: none; /* Allow container to use full width percentage */
+        padding: 5px;
     }
     
     .grid {
-        grid-template-columns: repeat(10, minmax(32px, 45px));
-        grid-template-rows: repeat(10, minmax(32px, 45px));
-        gap: 1px;
-    }
-    
-    .cell {
-        min-width: 32px;
-        font-size: 0.9em;
+        width: 100%;
     }
     
     .bones-container {
         width: 95%;
-        max-width: 500px;
         margin: 5px auto;
         padding: 5px;
     }
@@ -110,12 +117,16 @@ body {
         flex-wrap: wrap;
     }
     
+    /* Adjust bone sizing for smaller screens */
     .bone {
-        padding: 4px 8px;
+        padding: 6px;
         font-size: 0.85em;
-        min-width: 70px;
+        min-width: 60px;
+        max-width: 110px;
+        flex: 1 0 auto;
     }
     
+    /* Make bone selections more user-friendly on mobile */
     .bone-icon img {
         width: 20px;
         height: 20px;
@@ -123,19 +134,7 @@ body {
     
     .bone-controls {
         flex-wrap: wrap;
-    }
-    
-    .top-bar h1 {
-        font-size: 1.2rem;
-    }
-    
-    .controls {
-        padding: 5px;
-    }
-    
-    #rotate-btn, #random-placement-btn {
-        padding: 6px 10px;
-        font-size: 0.85rem;
+        justify-content: center;
     }
 }
 
@@ -151,11 +150,11 @@ body {
     }
     
     .top-bar h1 {
-        font-size: 1rem;
+        font-size: 0.9rem; /* Smaller title on very small screens */
     }
     
     .game-area {
-        padding: 3px;
+        padding: 3px 0;
     }
     
     .grid-container {
@@ -163,25 +162,16 @@ body {
         padding: 3px;
     }
     
-    .grid {
-        grid-template-columns: repeat(10, minmax(28px, 35px));
-        grid-template-rows: repeat(10, minmax(28px, 35px));
-        gap: 1px;
-    }
-    
-    .cell {
-        min-width: 28px;
-        border-radius: 2px;
-    }
-    
     .bones-container {
         width: 98%;
         padding: 3px;
     }
     
+    /* Further adjust bones for very small screens */
     .bone {
-        padding: 3px 6px;
-        font-size: 0.8em;
+        padding: 3px;
+        font-size: 0.7em;
+        min-width: 50px;
     }
     
     .bone-icon img {
@@ -191,32 +181,14 @@ body {
         max-height: 16px;
     }
     
+    .bone-label {
+        font-size: 0.7em;
+        top: -16px;
+    }
+    
     #rotate-btn, #random-placement-btn {
-        padding: 5px 8px;
-        font-size: 0.8rem;
-    }
-    
-    .modal-content {
-        width: 90%;
-        margin: 30% auto;
-        padding: 15px;
-    }
-    
-    #modal-title {
-        font-size: 1.1rem;
-    }
-    
-    #modal-message {
-        font-size: 0.9rem;
-    }
-    
-    .modal-buttons {
-        gap: 8px;
-    }
-    
-    #confirm-start-btn, #cancel-start-btn {
-        padding: 8px 12px;
-        font-size: 0.9rem;
+        padding: 5px 6px;
+        font-size: 0.75rem;
     }
 }
 
@@ -294,7 +266,16 @@ body {
     margin: 0 auto;
 }
 
-/* Grid container and grid */
+/* Board container */
+.board-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 600px;
+    transition: all 0.3s ease; /* Smooth transition between sizes */
+}
+
+/* Grid container during different game phases */
 .grid-container {
     background-color: #f8d8a8;
     padding: 8px;
@@ -303,16 +284,43 @@ body {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: 600px;
-    min-width: 470px; /* Ensures minimum width for 45px cells plus gaps */
+}
+
+/* During placement phase, make player grid bigger */
+body:not(.game-started) .board-container:first-child {
+    max-width: 600px; /* Player grid is larger during placement */
+    width: 100%;
+    order: 1; /* Place it prominently */
+}
+
+body:not(.game-started) .board-container:last-child {
+    max-width: 400px; /* Computer grid is smaller during placement */
+    width: 60%;
+    order: 2;
+    opacity: 0.7; /* Visually indicate it's not active */
+}
+
+/* During gameplay phase, make computer grid bigger */
+body.game-started .board-container:last-child {
+    max-width: 600px; /* Computer grid becomes larger during gameplay */
+    width: 100%;
+    order: 1; /* Place it prominently */
+    opacity: 1;
+}
+
+body.game-started .board-container:first-child {
+    max-width: 400px; /* Player grid becomes smaller during gameplay */
+    width: 60%;
+    order: 2;
 }
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(10, minmax(45px, 58px));
-    grid-template-rows: repeat(10, minmax(45px, 58px));
+    grid-template-columns: repeat(10, 1fr); /* Use 1fr instead of fixed sizes for better scaling */
+    grid-template-rows: repeat(10, 1fr);
     gap: 2px;
     width: 100%;
+    aspect-ratio: 1/1; /* Maintain square ratio */
 }
 
 .cell {
@@ -321,58 +329,34 @@ body {
     transition: all 0.2s ease;
     cursor: pointer;
     position: relative;
-    aspect-ratio: 1/1;
-    min-width: 45px;
-    max-width: 58px;
+    aspect-ratio: 1/1; /* Keep cells square */
+    min-width: auto; /* Remove min-width constraint */
+    max-width: none; /* Remove max-width constraint */
 }
 
-.cell:hover {
-    background-color: #d4a76a;
-}
-
-/* Responsive grid adjustments */
+/* Responsive grid adjustments - streamlined for clarity */
 @media (max-width: 1230px) {
     .game-area {
         flex-direction: column;
         align-items: center;
-        gap: 20px;
+        gap: 15px;
         height: auto;
         padding: 15px 10px;
     }
     
-    .grid-container {
+    /* Keep the same priority grid larger in both modes even in column layout */
+    body:not(.game-started) .board-container:first-child,
+    body.game-started .board-container:last-child {
         max-width: 580px;
-        min-width: 450px;
-    }
-}
-
-@media (max-width: 768px) {
-    .game-area {
-        flex-direction: column;
-        align-items: center;
-        gap: 15px;
-        padding: 10px;
-    }
-    
-    .grid-container {
-        min-width: unset;
         width: 95%;
+        order: 1;
     }
     
-    .grid {
-        grid-template-columns: repeat(10, minmax(35px, 45px));
-        grid-template-rows: repeat(10, minmax(35px, 45px));
-    }
-    
-    .cell {
-        min-width: 35px;
-    }
-}
-
-@media (max-width: 480px) {
-    .grid-container {
-        width: 90%;
-        max-width: 300px;
+    body:not(.game-started) .board-container:last-child,
+    body.game-started .board-container:first-child {
+        max-width: 400px;
+        width: 75%;
+        order: 2;
     }
 }
 
