@@ -89,23 +89,74 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Set up bone selection area
     function setupBoneSelection() {
-        const boneElements = playerBonesElement.querySelectorAll('.bone');
+        playerBonesElement.innerHTML = ''; // Clear existing bones
         
-        boneElements.forEach(bone => {
-            bone.addEventListener('click', () => {
+        // Create bone elements
+        bones.forEach(bone => {
+            const boneElement = document.createElement('div');
+            boneElement.classList.add('bone', bone.name.toLowerCase());
+            boneElement.dataset.size = bone.size;
+            boneElement.dataset.name = bone.name;
+            boneElement.dataset.boneName = bone.name;
+            
+            // Create a label element for the bone text - positioned absolutely to prevent rotation
+            const labelElement = document.createElement('div');
+            labelElement.classList.add('bone-label');
+            // labelElement.textContent = `${bone.name} (${bone.size})`;
+            labelElement.dataset.boneName = bone.name; // Add data attribute to help identify the label
+            
+            // Create an icon element for the bone if applicable
+            const iconElement = document.createElement('div');
+            iconElement.classList.add('bone-icon');
+            
+            const iconPath = getIconPathForBone(bone.name);
+            if (iconPath) {
+                const imgElement = document.createElement('img');
+                imgElement.src = iconPath;
+                imgElement.alt = bone.name;
+                iconElement.appendChild(imgElement);
+            }
+            
+            // Add the label and icon to the bone
+            boneElement.appendChild(labelElement);
+            boneElement.appendChild(iconElement);
+            
+            // Add event listener to select bone
+            boneElement.addEventListener('click', () => {
                 // Only allow selection if the bone hasn't been placed yet
-                if (!bone.classList.contains('placed')) {
+                if (!boneElement.classList.contains('placed')) {
                     // Clear previous selection
+                    const boneElements = playerBonesElement.querySelectorAll('.bone');
                     boneElements.forEach(b => b.classList.remove('selected'));
-                    bone.classList.add('selected');
+                    boneElement.classList.add('selected');
                     gameState.selectedBone = {
-                        element: bone,
-                        size: parseInt(bone.dataset.size),
-                        name: bone.textContent.split(' ')[0]
+                        element: boneElement,
+                        size: parseInt(boneElement.dataset.size),
+                        name: bone.name
                     };
                 }
             });
+            
+            playerBonesElement.appendChild(boneElement);
         });
+    }
+    
+    // Helper function to get appropriate icon path for bones
+    function getIconPathForBone(boneName) {
+        switch(boneName) {
+            case 'T-Rex':
+                return './assets/images/dinosaur-2-svgrepo-com.svg';
+            case 'Stegosaurus':
+                return './assets/images/dinosaur-animal-old-old-age-svgrepo-com.svg';
+            case 'Triceratops':
+                return './assets/images/parasaurolophus-svgrepo-com.svg';
+            case 'Velociraptor':
+                return './assets/images/velociraptor-svgrepo-com.svg';
+            case 'Compsognathus':
+                return './assets/images/dinosaur-shape-of-compsognathus-svgrepo-com.svg';
+            default:
+                return null;
+        }
     }
     
     // Add event listeners
@@ -116,15 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 gameState.orientation = 'vertical';
             } else {
                 gameState.orientation = 'horizontal';
-            }
-            
-            // Update visual cue
-            if (gameState.selectedBone) {
-                if (gameState.orientation === 'vertical') {
-                    gameState.selectedBone.element.classList.add('vertical');
-                } else {
-                    gameState.selectedBone.element.classList.remove('vertical');
-                }
             }
         });
         

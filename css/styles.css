@@ -60,6 +60,166 @@ body {
     }
 }
 
+/* Enhanced Responsive Design for Mobile and Tablet */
+@media (max-width: 768px) {
+    body {
+        overflow-y: auto;
+    }
+    
+    .container {
+        height: auto;
+        min-height: 100vh;
+    }
+    
+    .game-area {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        padding: 5px;
+        overflow-y: auto;
+    }
+    
+    .grid-container {
+        min-width: unset;
+        width: 95%;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .grid {
+        grid-template-columns: repeat(10, minmax(32px, 45px));
+        grid-template-rows: repeat(10, minmax(32px, 45px));
+        gap: 1px;
+    }
+    
+    .cell {
+        min-width: 32px;
+        font-size: 0.9em;
+    }
+    
+    .bones-container {
+        width: 95%;
+        max-width: 500px;
+        margin: 5px auto;
+        padding: 5px;
+    }
+    
+    .bones {
+        justify-content: center;
+        gap: 5px;
+        flex-wrap: wrap;
+    }
+    
+    .bone {
+        padding: 4px 8px;
+        font-size: 0.85em;
+        min-width: 70px;
+    }
+    
+    .bone-icon img {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .bone-controls {
+        flex-wrap: wrap;
+    }
+    
+    .top-bar h1 {
+        font-size: 1.2rem;
+    }
+    
+    .controls {
+        padding: 5px;
+    }
+    
+    #rotate-btn, #random-placement-btn {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+    }
+}
+
+/* Specific adjustments for small phones */
+@media (max-width: 480px) {
+    .container {
+        padding: 0;
+    }
+    
+    .top-bar {
+        padding: 3px 8px;
+        height: 35px;
+    }
+    
+    .top-bar h1 {
+        font-size: 1rem;
+    }
+    
+    .game-area {
+        padding: 3px;
+    }
+    
+    .grid-container {
+        width: 98%;
+        padding: 3px;
+    }
+    
+    .grid {
+        grid-template-columns: repeat(10, minmax(28px, 35px));
+        grid-template-rows: repeat(10, minmax(28px, 35px));
+        gap: 1px;
+    }
+    
+    .cell {
+        min-width: 28px;
+        border-radius: 2px;
+    }
+    
+    .bones-container {
+        width: 98%;
+        padding: 3px;
+    }
+    
+    .bone {
+        padding: 3px 6px;
+        font-size: 0.8em;
+    }
+    
+    .bone-icon img {
+        width: 16px;
+        height: 16px;
+        max-width: 16px;
+        max-height: 16px;
+    }
+    
+    #rotate-btn, #random-placement-btn {
+        padding: 5px 8px;
+        font-size: 0.8rem;
+    }
+    
+    .modal-content {
+        width: 90%;
+        margin: 30% auto;
+        padding: 15px;
+    }
+    
+    #modal-title {
+        font-size: 1.1rem;
+    }
+    
+    #modal-message {
+        font-size: 0.9rem;
+    }
+    
+    .modal-buttons {
+        gap: 8px;
+    }
+    
+    #confirm-start-btn, #cancel-start-btn {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+}
+
 /* Top bar styles */
 .top-bar {
     display: flex;
@@ -440,27 +600,49 @@ body {
     padding: 5px 0;
 }
 
-/* Fix the rotation issue with bones */
+/* Bone styles with improved structure for rotation */
 .bone {
-    padding: 6px 10px;
+    padding: 8px 10px;
     background-color: #a5694f;
     color: white;
     border-radius: 5px;
     cursor: grab;
     user-select: none;
-    min-width: 0;
-    white-space: nowrap;
+    min-width: 80px;
     display: flex;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
     position: relative;
+    transition: transform 0.3s ease, background-color 0.2s;
 }
 
-/* Adding styles to control the size of bone icons */
+/* Bone label styles - fixed to prevent rotation */
+.bone-label {
+    display: block;
+    position: absolute; /* Position absolutely to prevent rotation */
+    z-index: 2;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 0.9em;
+    font-weight: bold;
+    margin: 3px 0;
+    top: -22px; /* Position above the bone */
+    left: 0;
+    width: 100%;
+    color: #4a3520;
+    text-shadow: 0px 0px 1px rgba(255, 255, 255, 0.5);
+    transition: all 0.2s ease;
+    transform: none !important; /* Ensure no transforms apply to the label */
+}
+
+/* Bone icon styles */
 .bone-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: 5px;
+    margin-top: 3px;
+    transition: transform 0.3s ease;
 }
 
 .bone-icon img {
@@ -468,31 +650,74 @@ body {
     height: 24px;
     max-width: 24px;
     max-height: 24px;
+    transition: transform 0.3s ease;
 }
 
-/* This ensures the bone itself is rotated but text stays horizontal */
+/* Rotation handling - rotate the bone but keep label outside rotation */
 .bone.vertical {
     transform: rotate(90deg);
 }
 
-/* Ensure bone text always stays horizontal */
-.bone.vertical .bone-text {
-    transform: rotate(-90deg) !important;
-    display: inline-block;
+/* No need for counter-rotation since label is positioned absolutely */
+.bone.vertical .bone-label {
+    transform: none; /* No counter-rotation needed */
 }
 
-/* Only rotate the bone icon when vertical */
-.bone.vertical .bone-icon {
-    transform: rotate(0deg); /* This cancels out the parent rotation for the icon */
-}
-
+/* Selected bone styling - enhanced with multiple visual cues */
 .bone.selected {
-    outline: 3px solid #c65102;
+    outline: 3px solid #ffd700; /* Gold outline */
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    transform: scale(1.05);
+    background-color: #b07d5e; /* Lighter background when selected */
 }
 
-.bone.placed {
-    opacity: 0.5;
-    cursor: not-allowed;
+/* Keep the selected styling when vertical */
+.bone.vertical.selected {
+    transform: rotate(90deg) scale(1.05);
+}
+
+/* Make selected bone label more prominent */
+.bone.selected .bone-label {
+    font-weight: bolder;
+    color: #000000; /* Dark text for contrast */
+    text-shadow: 0px 0px 2px rgba(255, 215, 0, 0.7); /* Gold text shadow for better visibility */
+}
+
+/* Improved responsive bone styles for small screens */
+@media (max-width: 768px) {
+    .bone {
+        padding: 6px 8px;
+        min-width: 70px;
+    }
+    
+    .bone-label {
+        font-size: 0.85em;
+    }
+    
+    .bone-icon img {
+        width: 20px;
+        height: 20px;
+        max-width: 20px;
+        max-height: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .bone {
+        padding: 4px 6px;
+        min-width: 60px;
+    }
+    
+    .bone-label {
+        font-size: 0.8em;
+    }
+    
+    .bone-icon img {
+        width: 18px;
+        height: 18px;
+        max-width: 18px;
+        max-height: 18px;
+    }
 }
 
 /* Bones colors */
@@ -627,6 +852,69 @@ button:disabled {
     max-width: 400px;
     text-align: center;
     animation: modalFadeIn 0.3s;
+}
+
+/* Modal button container and button styles */
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Add space between buttons */
+    margin-top: 20px;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+/* Style for the start digging button (green) */
+#confirm-start-btn {
+    background-color: #6b8e23; /* Green color */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    border: none;
+    transition: all 0.2s ease;
+    justify-content: center;
+}
+
+#confirm-start-btn::before {
+    content: '\f304'; /* Font Awesome shovel icon */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+}
+
+#confirm-start-btn:hover {
+    background-color: #5a7d12; /* Darker green on hover */
+    transform: scale(1.05);
+}
+
+/* Style for the adjust button (orange) */
+#cancel-start-btn {
+    background-color: #e67e22; /* Orange color */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    border: none;
+    transition: all 0.2s ease;
+    justify-content: center;
+}
+
+#cancel-start-btn::before {
+    content: '\f2f1'; /* Font Awesome edit icon */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+}
+
+#cancel-start-btn:hover {
+    background-color: #d35400; /* Darker orange on hover */
+    transform: scale(1.05);
 }
 
 @keyframes modalFadeIn {

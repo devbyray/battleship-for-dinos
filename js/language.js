@@ -196,10 +196,10 @@ class LanguageManager {
         this.updateBoneNames();
         
         // Update buttons
-        this.updateElement('rotate-btn', 'rotateBoneBtn');
+        this.updateButtonWithIcon('rotate-btn', 'rotateBoneBtn', 'fa-rotate');
         this.updateElement('random-placement-btn', 'randomPlacementBtn');
         this.updateElement('start-game-btn', 'startGameBtn');
-        this.updateElement('top-reset-btn', 'resetGameBtn');
+        this.updateButtonWithIcon('top-reset-btn', 'resetGameBtn', 'fa-undo-alt');
         
         // Update modal elements
         this.updateElement('modal-title', 'modalGameOver');
@@ -207,6 +207,26 @@ class LanguageManager {
         
         // Update language switcher label
         this.updateElement('language-label', 'languageSwitcher');
+    }
+    
+    // Update button text while preserving its icon
+    updateButtonWithIcon(elementId, textKey, iconClass) {
+        const button = document.getElementById(elementId);
+        if (button) {
+            // Clear the button content
+            button.innerHTML = '';
+            
+            // Create the icon element
+            const iconElement = document.createElement('i');
+            iconElement.className = `fas ${iconClass}`;
+            
+            // Add the icon and text to the button
+            button.appendChild(iconElement);
+            
+            // Add a space after the icon
+            const textNode = document.createTextNode(` ${this.getText(textKey)}`);
+            button.appendChild(textNode);
+        }
     }
     
     // Update bone names with size
@@ -217,43 +237,98 @@ class LanguageManager {
                 .find(cls => cls !== 'bone' && cls !== 'selected' && cls !== 'placed' && cls !== 'vertical');
             
             if (boneClass) {
-                const boneName = boneClass.replace('-', '');
+                // Get consistent bone key name
+                const boneKey = this.getBoneKeyFromClass(boneClass);
                 const size = bone.dataset.size;
-                const boneIconElement = bone.querySelector('.bone-icon');
-                let originalText = '';
                 
-                switch (boneName) {
-                    case 'trex':
-                        originalText = `${this.getText('tRex')} (${size})`;
-                        break;
-                    case 'stegosaurus':
-                        originalText = `${this.getText('stegosaurus')} (${size})`;
-                        break;
-                    case 'triceratops':
-                        originalText = `${this.getText('triceratops')} (${size})`;
-                        break;
-                    case 'velociraptor':
-                        originalText = `${this.getText('velociraptor')} (${size})`;
-                        break;
-                    case 'compsognathus':
-                        originalText = `${this.getText('compsognathus')} (${size})`;
-                        break;
+                // Check if bone-text element exists, create if not
+                let boneTextElement = bone.querySelector('.bone-text');
+                if (!boneTextElement) {
+                    boneTextElement = document.createElement('span');
+                    boneTextElement.className = 'bone-text';
+                    // Insert before bone-icon if it exists
+                    const boneIcon = bone.querySelector('.bone-icon');
+                    if (boneIcon) {
+                        bone.insertBefore(boneTextElement, boneIcon);
+                    } else {
+                        bone.appendChild(boneTextElement);
+                    }
                 }
                 
-                // Set text content without affecting the bone-icon
-                const textNode = Array.from(bone.childNodes)
-                    .find(node => node.nodeType === Node.TEXT_NODE);
+                // Set bone name and size
+                const translatedName = this.getText(boneKey);
+                boneTextElement.textContent = `${translatedName} (${size})`;
                 
-                if (textNode) {
-                    textNode.textContent = originalText;
-                } else if (boneIconElement) {
-                    // Insert text before bone icon
-                    bone.insertBefore(document.createTextNode(originalText), boneIconElement);
-                } else {
-                    bone.textContent = originalText;
-                }
+                // Store the original bone name as a data attribute to prevent duplicates
+                bone.dataset.boneName = translatedName;
             }
         });
+    }
+    
+    // Helper method to get consistent bone key from class name
+    getBoneKeyFromClass(boneClass) {
+        if (!boneClass) return 'unknown';
+        
+        // Handle the case where we might get passed the whole bone object
+        const normalizedName = typeof boneClass === 'object' && boneClass.name 
+            ? boneClass.name.toLowerCase().trim() 
+            : String(boneClass).toLowerCase().trim();
+        
+        // More comprehensive matching with variations
+        // T-Rex variations
+        if (/^t[-_ ]?rex$/i.test(normalizedName) || normalizedName === 'trex' || normalizedName === 't-rex') {
+            return 'tRex';
+        }
+        
+        // Stegosaurus variations
+        if (/^stego(?:saurus)?$/i.test(normalizedName) || normalizedName === 'stegosaurus') {
+            return 'stegosaurus';
+        }
+        
+        // Triceratops variations
+        if (/^tri(?:ceratops)?$/i.test(normalizedName) || normalizedName === 'triceratops') {
+            return 'triceratops';
+        }
+        
+        // Velociraptor variations
+        if (/^(?:veloci)?raptor$/i.test(normalizedName) || /^velo(?:ciraptor)?$/i.test(normalizedName) || normalizedName === 'velociraptor') {
+            return 'velociraptor';
+        }
+        
+        // Compsognathus variations
+        if (/^comp(?:sognathus|so|y)?$/i.test(normalizedName) || normalizedName === 'compsognathus') {
+            return 'compsognathus';
+        }
+        
+        // If no match, return a standardized version of the original name
+        return this.standardizeBoneName(normalizedName);
+    }
+    
+    // Enhanced helper method to standardize bone names as a fallback
+    standardizeBoneName(name) {
+        // Convert to lowercase and remove special characters
+        const standardName = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+        
+        // Known mappings for special cases - expanded to cover more variations
+        const nameMap = {
+            'trex': 'tRex',
+            'tyrannosaurus': 'tRex',
+            'tyrannosaurusrex': 'tRex',
+            'tyrex': 'tRex',
+            'rex': 'tRex',
+            'stego': 'stegosaurus',
+            'tri': 'triceratops',
+            'trice': 'triceratops',
+            'raptor': 'velociraptor',
+            'velo': 'velociraptor',
+            'veloce': 'velociraptor',
+            'comp': 'compsognathus',
+            'compy': 'compsognathus',
+            'compso': 'compsognathus',
+            'compsognat': 'compsognathus'
+        };
+        
+        return nameMap[standardName] || name;
     }
 }
 
